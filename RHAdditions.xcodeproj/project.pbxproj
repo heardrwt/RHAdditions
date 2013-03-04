@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		131C650616E187860040F784 /* RHCategories */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RHCategories; sourceTree = "<group>"; };
+		1360CAD616E495F100F54D48 /* RHAdditions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = RHAdditions; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
 		13ADCE7916E18649001F4190 = {
 			isa = PBXGroup;
 			children = (
-				131C650616E187860040F784 /* RHCategories */,
+				1360CAD616E495F100F54D48 /* RHAdditions */,
 			);
 			sourceTree = "<group>";
 		};

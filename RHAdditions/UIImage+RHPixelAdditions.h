@@ -27,7 +27,7 @@
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // Supports accessing the underlying raw pixel data of a UIImage, both in bulk and on a point by point basis.
-// Returned format is RGBA premultipled as is supported by CoreGraphics.
+// Returned format is RGBA pre-multiplied as is supported by CoreGraphics.
 
 #import <UIKit/UIKit.h>
 #import <CoreGraphics/CoreGraphics.h>

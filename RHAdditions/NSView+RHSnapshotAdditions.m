@@ -27,9 +27,6 @@
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-//Provides NSView snapshotting, useful for animations and cover transitions.
-
-
 #import <Cocoa/Cocoa.h>
 
 @implementation NSView (RHSnapshotAdditions)
