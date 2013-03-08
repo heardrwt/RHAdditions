@@ -43,13 +43,13 @@ typedef CFTypeRef CGSRegionRef;
 
 CG_EXTERN CGSConnectionID CGSMainConnectionID(void);
 
-CG_EXTERN CGError CGSGetWindowBounds(CGSConnectionID cid, int wid, CGRect *rectOut);
+CG_EXTERN CGError CGSGetWindowBounds(CGSConnectionID cid, CGSWindowID wid, CGRect *rectOut);
 
 CG_EXTERN CGError CGSNewRegionWithRect(const CGRect *rect, CGSRegionRef *regionOut);
 CG_EXTERN bool CGSRegionIsEmpty(CGSRegionRef region);
 CG_EXTERN CGError CGSReleaseRegion(CGSRegionRef region);
 
-CG_EXTERN CGError CGSSetWindowCaptureExcludeShape(CGSConnectionID cid, int a, CGSRegionRef region);
+CG_EXTERN CGError CGSSetWindowCaptureExcludeShape(CGSConnectionID cid, CGSWindowID wid, CGSRegionRef region);
 // ------ END PRIVATE API ------
 
 
