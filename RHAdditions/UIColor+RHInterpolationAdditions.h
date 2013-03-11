@@ -37,3 +37,4 @@
 -(UIColor*)blendedColorWithFraction:(CGFloat)fraction ofColor:(UIColor*)color;
 
 @end
+

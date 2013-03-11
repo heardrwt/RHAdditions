@@ -38,3 +38,4 @@
 @end
 
 extern NSDictionary* RHInfoForClass(Class debugClass);
+

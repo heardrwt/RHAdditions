@@ -99,4 +99,3 @@ static inline float interpolate(CGFloat a, CGFloat b, CGFloat fraction) {
 //include an implementation in this file so we don't have to use -load_all for this category to be included in a static lib
 @interface RHFixCategoryBugClassUICRHIA : NSObject @end @implementation RHFixCategoryBugClassUICRHIA @end
 
-

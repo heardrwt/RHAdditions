@@ -125,4 +125,3 @@ NSString* NSStringGenerateSHA1FromString(NSString *string){
 //include an implementation in this file so we don't have to use -load_all for this category to be included in a static lib
 @interface RHFixCategoryBugClassUIDRHDIA : NSObject @end @implementation RHFixCategoryBugClassUIDRHDIA @end
 
-

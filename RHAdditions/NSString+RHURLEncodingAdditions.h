@@ -37,3 +37,4 @@
 @end
 
 extern CFStringRef RHCreateStringByURLEncodingStringWithEncoding(CFStringRef string, CFStringEncoding encoding);
+

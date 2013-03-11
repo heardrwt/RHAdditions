@@ -49,3 +49,4 @@
 
 CGFloat UIImagePercentageDifferenceBetweenImages(UIImage* image1, UIImage* image2); // default tolerance of 25 (10% of of 255)
 CGFloat UIImagePercentageDifferenceBetweenImagesWithTolerance(UIImage* image1, UIImage* image2, CGFloat percentageTolerance, BOOL shouldScaleIfImageSizesMismatched);
+

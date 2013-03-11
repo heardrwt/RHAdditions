@@ -37,3 +37,4 @@
 -(CGFloat)heightForWidth:(CGFloat)width;
 -(CGFloat)widthForHeight:(CGFloat)height;
 @end
+

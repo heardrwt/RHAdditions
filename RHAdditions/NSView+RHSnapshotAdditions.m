@@ -50,4 +50,3 @@
 //include an implementation in this file so we don't have to use -load_all for this category to be included in a static lib
 @interface RHFixCategoryBugClassNSVRHSA : NSObject @end @implementation RHFixCategoryBugClassNSVRHSA @end
 
-

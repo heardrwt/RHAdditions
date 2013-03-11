@@ -34,3 +34,4 @@
 -(void)resizeForContentSize:(NSSize)size duration:(CGFloat)duration;
 
 @end
+

@@ -41,5 +41,5 @@
 -(unsigned long long)unsignedLongLongValue;
 -(NSUInteger)unsignedIntegerValue;
 
-
 @end
+

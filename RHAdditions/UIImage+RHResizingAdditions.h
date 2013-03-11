@@ -33,12 +33,11 @@
 
 @interface UIImage (RHResizingAdditions)
 
-
 -(UIImage*)imageResizedToSize:(CGSize)size; //resize the image, preserving image rotation and scale metadata
 
 @end
 
 
 // underlying implementation
-
 UIImage* UIImageResizeImageToSize(UIImage *image, CGSize size);
+

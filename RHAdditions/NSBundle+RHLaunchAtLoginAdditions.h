@@ -39,3 +39,4 @@
 
 extern BOOL RHLaunchAtLoginEnabledForBundleIdentifier(NSString *bundleIdentifier);
 extern BOOL RHLaunchAtLoginSetEnabledForBundleIdentifier(NSString *bundleIdentifier, BOOL enabled);
+

@@ -44,3 +44,4 @@ extern NSData* RHImageJPEGRepresentationForImage(NSImage* image, float compressi
 extern NSData* RHImageGIFRepresentationForImage(NSImage* image);
 
 extern NSData* RHImageBestRepresentationForImage(NSImage* image);
+

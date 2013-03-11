@@ -70,4 +70,3 @@ extern BOOL RHLaunchAtLoginSetEnabledForBundleIdentifier(NSString *bundleIdentif
 //include an implementation in this file so we don't have to use -load_all for this category to be included in a static lib
 @interface RHFixCategoryBugClassNSBRHLALA : NSObject @end @implementation RHFixCategoryBugClassNSBRHLALA @end
 
-

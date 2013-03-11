@@ -39,7 +39,6 @@
 @end
 
 
-
 #pragma mark - underlying implementation
 
 UIImage* UIImageResizeImageToSize(UIImage *image, CGSize size){
@@ -78,5 +77,4 @@ UIImage* UIImageResizeImageToSize(UIImage *image, CGSize size){
 
 //include an implementation in this file so we don't have to use -load_all for this category to be included in a static lib
 @interface RHFixCategoryBugClassUIIRHRA : NSObject @end @implementation RHFixCategoryBugClassUIIRHRA @end
-
 
