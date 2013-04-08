@@ -1,5 +1,5 @@
 //
-//  RHARCSupport.h
+//  RHLoggingSupport.h
 //
 //  Created by Richard Heard on 3/07/12.
 //  Copyright (c) 2012 Richard Heard. All rights reserved.
@@ -26,9 +26,14 @@
 //  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// debug logging macros
+// logging macros
+//
+// To enable debug logging use a define such as below:
+// #define RH_ENABLE_DEBUG_LOGGING (defined(DEBUG) && DEBUG)
 
-#if RH_AB_ENABLE_DEBUG_LOGGING
+
+
+#if (defined(RH_ENABLE_DEBUG_LOGGING) && RH_ENABLE_DEBUG_LOGGING)
 #define RHLog(format, ...) NSLog( @"%s:%i %@ ", __PRETTY_FUNCTION__, __LINE__, [NSString stringWithFormat: format, ##__VA_ARGS__])
 #else
 #define RHLog(format, ...)

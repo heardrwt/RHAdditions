@@ -27,7 +27,7 @@
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "NSString+RHR13Additions.h"
+#import "NSString+RHRot13Additions.h"
 
 @implementation NSString (RHRot13Additions)
 

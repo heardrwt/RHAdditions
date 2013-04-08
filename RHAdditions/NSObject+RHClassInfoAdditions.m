@@ -27,12 +27,12 @@
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "NSObject+RHDumpInfoAdditions.h"
+#import "NSObject+RHClassInfoAdditions.h"
 
 @implementation NSObject (RHClassInfoAdditions)
 
 -(void)logClassInfo{
-    NSLog(@"%@", RHInfoForClass([self Class]));
+    NSLog(@"%@", RHInfoForClass([self class]));
 }
 
 @end
