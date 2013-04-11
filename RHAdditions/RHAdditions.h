@@ -46,7 +46,7 @@
 #import "NSThread+RHBlockAdditions.h"
 
 
-#if defined(TARGET_IPHONE_OS) && TARGET_IPHONE_OS
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 //ios only
 #import "UIApplication+RHStatusBarBoundsAdditions.h"
 #import "UIColor+RHInterpolationAdditions.h"
