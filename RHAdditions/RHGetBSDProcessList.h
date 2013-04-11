@@ -1,8 +1,7 @@
 //
-//  RHAdditions.h
-//  RHAdditions
+//  RHGetBSDProcessList.h
 //
-//  Created by Richard Heard on 7/04/13.
+//  Created by Richard Heard on 11/04/13.
 //  Copyright (c) 2013 Richard Heard. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
@@ -26,46 +25,11 @@
 //  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 //  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 
+#import <Foundation/Foundation.h>
+#include <sys/sysctl.h>
 
-#ifdef __APPLE__
-#import "TargetConditionals.h"
-#endif
-
-
-//common
-#import "RHARCSupport.h"
-#import "RHLoggingSupport.h"
-
-#import "NSArray+RHFirstObjectAdditions.h"
-#import "NSDate+RHCalendarAdditions.h"
-#import "NSObject+RHClassInfoAdditions.h"
-#import "NSString+RHNumberAdditions.h"
-#import "NSString+RHRot13Additions.h"
-#import "NSString+RHURLEncodingAdditions.h"
-#import "NSThread+RHBlockAdditions.h"
-
-
-#if defined(TARGET_IPHONE_OS) && TARGET_IPHONE_OS
-//ios only
-#import "UIApplication+RHStatusBarBoundsAdditions.h"
-#import "UIColor+RHInterpolationAdditions.h"
-#import "UIDevice+RHDeviceIdentifierAdditions.h"
-#import "UIImage+RHComparingAdditions.h"
-#import "UIImage+RHPixelAdditions.h"
-#import "UIImage+RHResizingAdditions.h"
-#import "UILabel+RHSizeAdditions.h"
-#import "UIView+RHCompletedActionBadgeAdditions.h"
-#import "UIView+RHSnapshotAdditions.h"
-
-#else
-//mac only
-#import "NSBundle+RHLaunchAtLoginAdditions.h"
-#import "NSImage+RHImageRepresentationAdditions.h"
-#import "NSView+RHSnapshotAdditions.h"
-#import "NSWindow+RHPreventCaptureAdditions.h"
-#import "NSWindow+RHResizeAdditions.h"
-#import "RHGetBSDProcessList.h"
-
-#endif
+extern NSArray* RHGetBSDProcessList(); //returns an array of dictionaries with { processID / processName / userID / userName }
+extern int GetBSDProcessList(struct kinfo_proc **procList, size_t *procCount);
 
