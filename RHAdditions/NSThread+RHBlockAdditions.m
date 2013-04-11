@@ -28,6 +28,7 @@
 //
 
 #import "NSThread+RHBlockAdditions.h"
+#import "RHARCSupport.h"
 
 @implementation NSThread (RHBlockAdditions)
 

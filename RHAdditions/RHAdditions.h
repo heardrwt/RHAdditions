@@ -29,41 +29,41 @@
 
 
 #ifdef __APPLE__
-#include "TargetConditionals.h"
+#import "TargetConditionals.h"
 #endif
 
 
 //common
-#include "RHARCSupport.h"
-#include "RHLoggingSupport.h"
+#import "RHARCSupport.h"
+#import "RHLoggingSupport.h"
 
-#include "NSArray+RHFirstObjectAdditions.h"
-#include "NSDate+RHCalendarAdditions.h"
-#include "NSObject+RHClassInfoAdditions.h"
-#include "NSString+RHNumberAdditions.h"
-#include "NSString+RHRot13Additions.h"
-#include "NSString+RHURLEncodingAdditions.h"
-#include "NSThread+RHBlockAdditions.h"
+#import "NSArray+RHFirstObjectAdditions.h"
+#import "NSDate+RHCalendarAdditions.h"
+#import "NSObject+RHClassInfoAdditions.h"
+#import "NSString+RHNumberAdditions.h"
+#import "NSString+RHRot13Additions.h"
+#import "NSString+RHURLEncodingAdditions.h"
+#import "NSThread+RHBlockAdditions.h"
 
 
 #if defined(TARGET_IPHONE_OS) && TARGET_IPHONE_OS
 //ios only
-#include "UIApplication+RHStatusBarBoundsAdditions.h"
-#include "UIColor+RHInterpolationAdditions.h"
-#include "UIDevice+RHDeviceIdentifierAdditions.h"
-#include "UIImage+RHComparingAdditions.h"
-#include "UIImage+RHPixelAdditions.h"
-#include "UIImage+RHResizingAdditions.h"
-#include "UILabel+RHSizeAdditions.h"
-#include "UIView+RHCompletedActionBadgeAdditions.h"
-#include "UIView+RHSnapshotAdditions.h"
+#import "UIApplication+RHStatusBarBoundsAdditions.h"
+#import "UIColor+RHInterpolationAdditions.h"
+#import "UIDevice+RHDeviceIdentifierAdditions.h"
+#import "UIImage+RHComparingAdditions.h"
+#import "UIImage+RHPixelAdditions.h"
+#import "UIImage+RHResizingAdditions.h"
+#import "UILabel+RHSizeAdditions.h"
+#import "UIView+RHCompletedActionBadgeAdditions.h"
+#import "UIView+RHSnapshotAdditions.h"
 
 #else
 //mac only
-#include "NSBundle+RHLaunchAtLoginAdditions.h"
-#include "NSImage+RHImageRepresentationAdditions.h"
-#include "NSView+RHSnapshotAdditions.h"
-#include "NSWindow+RHPreventCaptureAdditions.h"
-#include "NSWindow+RHResizeAdditions.h"
+#import "NSBundle+RHLaunchAtLoginAdditions.h"
+#import "NSImage+RHImageRepresentationAdditions.h"
+#import "NSView+RHSnapshotAdditions.h"
+#import "NSWindow+RHPreventCaptureAdditions.h"
+#import "NSWindow+RHResizeAdditions.h"
 
 #endif
