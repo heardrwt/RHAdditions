@@ -62,6 +62,7 @@
 //mac only
 #import "NSBundle+RHLaunchAtLoginAdditions.h"
 #import "NSImage+RHImageRepresentationAdditions.h"
+#import "NSImage+RHResizableImageAdditions.h"
 #import "NSView+RHSnapshotAdditions.h"
 #import "NSWindow+RHPreventCaptureAdditions.h"
 #import "NSWindow+RHResizeAdditions.h"
