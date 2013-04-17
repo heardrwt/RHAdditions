@@ -31,6 +31,9 @@
 #import "NSImage+RHResizableImageAdditions.h"
 #import "RHARCSupport.h"
 
+//if enabled, we use RHDrawNinePartImage() instead of NSDrawNinePartImage()
+#define USE_RH_NINE_PART 0
+
 //==========
 #pragma mark - RHEdgeInsets
 
@@ -132,7 +135,7 @@ const RHEdgeInsets RHEdgeInsetsZero = {0.0f, 0.0f, 0.0f, 0.0f};
 -(void)drawInRect:(NSRect)rect fromRect:(NSRect)fromRect operation:(NSCompositingOperation)op fraction:(CGFloat)requestedAlpha respectFlipped:(BOOL)respectContextIsFlipped hints:(NSDictionary *)hints{
     //fromRect and hints are both ignored
     
-    //if our current chached image size does not match, throw away the cached image
+    //if our current cached image size does not match, throw away the cached image
     if (!NSEqualSizes(rect.size, _cachedImageSize)){
         arc_release_nil(_cachedImage);
         _cachedImageSize = NSZeroSize;
@@ -152,6 +155,14 @@ const RHEdgeInsets RHEdgeInsetsZero = {0.0f, 0.0f, 0.0f, 0.0f};
 
         
         
+#if USE_RH_NINE_PART
+        BOOL shouldTile = (_resizingMode == RHResizableImageResizingModeTile);
+        RHDrawNinePartImage(drawRect,
+                            [_imagePieces objectAtIndex:0], [_imagePieces objectAtIndex:1], [_imagePieces objectAtIndex:2],
+                            [_imagePieces objectAtIndex:3], [_imagePieces objectAtIndex:4], [_imagePieces objectAtIndex:5],
+                            [_imagePieces objectAtIndex:6], [_imagePieces objectAtIndex:7], [_imagePieces objectAtIndex:8],
+                            NSCompositeSourceOver, 1.0f, shouldTile);
+#else
         NSDrawNinePartImage(drawRect,
                             [_imagePieces objectAtIndex:0], [_imagePieces objectAtIndex:1], [_imagePieces objectAtIndex:2],
                             [_imagePieces objectAtIndex:3], [_imagePieces objectAtIndex:4], [_imagePieces objectAtIndex:5],
@@ -159,13 +170,17 @@ const RHEdgeInsets RHEdgeInsetsZero = {0.0f, 0.0f, 0.0f, 0.0f};
                             NSCompositeSourceOver, 1.0f, NO);
         
         //if we want a center stretch, we need to draw this separately, clearing center first
-        if (_resizingMode == RHResizableImageResizingModeStretch){
+        //also note that this only stretches the center, if you also want all sides stretched,
+        // you should use RHDrawNinePartImage() via USE_RH_NINE_PART = 1
+        BOOL shouldStretch = (_resizingMode == RHResizableImageResizingModeStretch);
+        if (shouldStretch){
             NSImage *centerImage = [_imagePieces objectAtIndex:4];
             NSRect centerRect = RHEdgeInsetsInsetRect(drawRect, _capInsets, NO);
             CGContextClearRect([[NSGraphicsContext currentContext] graphicsPort], NSRectToCGRect(centerRect));
             [centerImage drawInRect:centerRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0f respectFlipped:NO hints:nil];
         }
 
+#endif
         
         [_cachedImage unlockFocus];
     }
@@ -234,6 +249,77 @@ NSArray* RHNinePartPiecesFromImageWithInsets(NSImage *image, RHEdgeInsets capIns
     NSImage *bottomRightCorner = RHCapturePieceOfImageFromRect(image, CGRectMake(imageWidth - rightCapWidth, 0.0f, rightCapWidth, bottomCapHeight));
     
     return [NSArray arrayWithObjects:topLeftCorner, topEdgeFill, topRightCorner, leftEdgeFill, centerFill, rightEdgeFill, bottomLeftCorner, bottomEdgeFill, bottomRightCorner, nil];
+}
+
+
+
+//==========
+#pragma mark - nine part
+
+
+
+void RHDrawNinePartImage(NSRect frame, NSImage *topLeftCorner, NSImage *topEdgeFill, NSImage *topRightCorner, NSImage *leftEdgeFill, NSImage *centerFill, NSImage *rightEdgeFill, NSImage *bottomLeftCorner, NSImage *bottomEdgeFill, NSImage *bottomRightCorner, NSCompositingOperation op, CGFloat alphaFraction, BOOL shouldTile){
+    
+    CGFloat imageWidth = frame.size.width;
+    CGFloat imageHeight = frame.size.height;
+    
+    CGFloat leftCapWidth = topLeftCorner.size.width;
+    CGFloat topCapHeight = topLeftCorner.size.height;
+    CGFloat rightCapWidth = bottomRightCorner.size.width;
+    CGFloat bottomCapHeight = bottomRightCorner.size.height;
+    
+    CGSize centerSize = CGSizeMake(imageWidth - leftCapWidth - rightCapWidth, imageHeight - topCapHeight - bottomCapHeight);
+
+    
+    CGRect topLeftCornerRect = CGRectMake(0.0f, imageHeight - topCapHeight, leftCapWidth, topCapHeight);
+    CGRect topEdgeFillRect = CGRectMake(leftCapWidth, imageHeight - topCapHeight, centerSize.width, topCapHeight);
+    CGRect topRightCornerRect = CGRectMake(imageWidth - rightCapWidth, imageHeight - topCapHeight, rightCapWidth, topCapHeight);
+    
+    CGRect leftEdgeFillRect = CGRectMake(0.0f, bottomCapHeight, leftCapWidth, centerSize.height);
+    CGRect centerFillRect = CGRectMake(leftCapWidth, bottomCapHeight, centerSize.width, centerSize.height);
+    CGRect rightEdgeFillRect = CGRectMake(imageWidth - rightCapWidth, bottomCapHeight, rightCapWidth, centerSize.height);
+    
+    CGRect bottomLeftCornerRect = CGRectMake(0.0f, 0.0f, leftCapWidth, bottomCapHeight);
+    CGRect bottomEdgeFillRect = CGRectMake(leftCapWidth, 0.0f, centerSize.width, bottomCapHeight);
+    CGRect bottomRightCornerRect = CGRectMake(imageWidth - rightCapWidth, 0.0f, rightCapWidth, bottomCapHeight);
+    
+    
+    RHDrawImageInRect(topLeftCorner, topLeftCornerRect, op, fraction, NO);
+    RHDrawImageInRect(topEdgeFill, topEdgeFillRect, op, fraction, shouldTile);
+    RHDrawImageInRect(topRightCorner, topRightCornerRect, op, fraction, NO);
+    
+    RHDrawImageInRect(leftEdgeFill, leftEdgeFillRect, op, fraction, shouldTile);
+    RHDrawImageInRect(centerFill, centerFillRect, op, fraction, shouldTile);
+    RHDrawImageInRect(rightEdgeFill, rightEdgeFillRect, op, fraction, shouldTile);
+    
+    RHDrawImageInRect(bottomLeftCorner, bottomLeftCornerRect, op, fraction, NO);
+    RHDrawImageInRect(bottomEdgeFill, bottomEdgeFillRect, op, fraction, shouldTile);
+    RHDrawImageInRect(bottomRightCorner, bottomRightCornerRect, op, fraction, NO);
+
+}
+
+void RHDrawImageInRect(NSImage* image, NSRect rect, NSCompositingOperation op, CGFloat fraction, BOOL tile){
+    if (tile){
+        RHDrawTiledImageInRect(image, rect, op, fraction);
+    } else {
+        [image drawInRect:rect fromRect:NSZeroRect operation:op fraction:fraction];
+    }
+}
+
+void RHDrawTiledImageInRect(NSImage* image, NSRect rect, NSCompositingOperation op, CGFloat fraction){
+    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    CGContextSaveGState(context);
+    
+    [[NSGraphicsContext currentContext] setCompositingOperation:op];
+    CGContextSetAlpha(context, fraction);
+    
+    NSRect outRect = rect;
+    CGImageRef imageRef = [image CGImageForProposedRect:&outRect context:NULL hints:NULL];
+    
+    CGContextClipToRect(context, NSRectToCGRect(outRect));
+    CGContextDrawTiledImage(context, CGRectMake(rect.origin.x, rect.origin.y, image.size.width, image.size.height), imageRef);
+    
+    CGContextRestoreGState(context);
 }
 
 
