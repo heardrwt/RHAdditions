@@ -31,8 +31,6 @@
 #import "NSImage+RHResizableImageAdditions.h"
 #import "RHARCSupport.h"
 
-//if enabled, we use RHDrawNinePartImage() instead of NSDrawNinePartImage()
-#define USE_RH_NINE_PART 0
 
 //==========
 #pragma mark - RHEdgeInsets
@@ -64,11 +62,6 @@ const RHEdgeInsets RHEdgeInsetsZero = {0.0f, 0.0f, 0.0f, 0.0f};
 
 @implementation NSImage (RHResizableImageAdditions)
 
--(RHResizableImage*)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(CGFloat)topCapHeight{
-    RHResizableImage *new = [[RHResizableImage alloc] initWithImage:self leftCapWidth:leftCapWidth topCapHeight:topCapHeight];
-    return arc_autorelease(new);
-}
-
 -(RHResizableImage*)resizableImageWithCapInsets:(RHEdgeInsets)capInsets{
     RHResizableImage *new = [[RHResizableImage alloc] initWithImage:self capInsets:capInsets];
     return arc_autorelease(new);
@@ -77,6 +70,19 @@ const RHEdgeInsets RHEdgeInsetsZero = {0.0f, 0.0f, 0.0f, 0.0f};
 -(RHResizableImage*)resizableImageWithCapInsets:(RHEdgeInsets)capInsets resizingMode:(RHResizableImageResizingMode)resizingMode{
     RHResizableImage *new = [[RHResizableImage alloc] initWithImage:self capInsets:capInsets resizingMode:resizingMode];
     return arc_autorelease(new);
+}
+
+-(RHResizableImage*)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(CGFloat)topCapHeight{
+    RHResizableImage *new = [[RHResizableImage alloc] initWithImage:self leftCapWidth:leftCapWidth topCapHeight:topCapHeight];
+    return arc_autorelease(new);
+}
+
+-(void)drawTiledInRect:(NSRect)rect operation:(NSCompositingOperation)op fraction:(CGFloat)delta{
+    RHDrawTiledImageInRect(self, rect, op, delta);
+}
+
+-(void)drawStretchedInRect:(NSRect)rect operation:(NSCompositingOperation)op fraction:(CGFloat)delta{
+    RHDrawStretchedImageInRect(self, rect, op, delta);
 }
 
 @end
@@ -113,9 +119,11 @@ const RHEdgeInsets RHEdgeInsetsZero = {0.0f, 0.0f, 0.0f, 0.0f};
     return self;
 }
 
+
+
 -(void)dealloc{
     arc_release_nil(_imagePieces);
-    arc_release_nil(_cachedImage);
+    arc_release_nil(_cachedImageRep);
 
     arc_super_dealloc();
 }
@@ -133,29 +141,50 @@ const RHEdgeInsets RHEdgeInsetsZero = {0.0f, 0.0f, 0.0f, 0.0f};
 }
 
 -(void)drawInRect:(NSRect)rect fromRect:(NSRect)fromRect operation:(NSCompositingOperation)op fraction:(CGFloat)requestedAlpha respectFlipped:(BOOL)respectContextIsFlipped hints:(NSDictionary *)hints{
-    //fromRect and hints are both ignored
-    
-    //if our current cached image size does not match, throw away the cached image
-    if (!NSEqualSizes(rect.size, _cachedImageSize)){
-        arc_release_nil(_cachedImage);
+    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+
+    //if our current cached image ref size does not match, throw away the cached image
+    //we also treat the current contexts scale as an invalidator so we don't draw the old, cached result.
+    if (!NSEqualSizes(rect.size, _cachedImageSize) || _cachedImageDeviceScale != RHContextGetDeviceScale(context)){
+        arc_release_nil(_cachedImageRep);
         _cachedImageSize = NSZeroSize;
+        _cachedImageDeviceScale = 0.0f;
     }
     
     
-    //if we dont have a cached image, create one now
-    if (!_cachedImage){
+    //if we don't have a cached image rep, create one now
+    if (!_cachedImageRep){
+
+        //cache our cache invalidation flags
         _cachedImageSize = rect.size;
-        _cachedImage = [[NSImage alloc] initWithSize:_cachedImageSize];
-        [_cachedImage lockFocus];
+        _cachedImageDeviceScale = RHContextGetDeviceScale(context);
+        
+        //create our own NSBitmapImageRep directly because calling -[NSImage lockFocus] and then drawing an
+        //image causes it to use the largest available (ie @2x) image representation, even though our current
+        //contexts scale is 1 (on non HiDPI screens) meaning that we inadvertently would use @2x assets to draw for @1x contexts
+        _cachedImageRep =  [[NSBitmapImageRep alloc]
+                            initWithBitmapDataPlanes:NULL
+                            pixelsWide:_cachedImageSize.width * _cachedImageDeviceScale
+                            pixelsHigh:_cachedImageSize.height * _cachedImageDeviceScale
+                            bitsPerSample:8
+                            samplesPerPixel:4
+                            hasAlpha:[[[self representations] lastObject] hasAlpha]
+                            isPlanar:[[[self representations] lastObject] isPlanar]
+                            colorSpaceName:[[[self representations] lastObject] colorSpaceName]
+                            bytesPerRow:0
+                            bitsPerPixel:[[[self representations] lastObject] bitsPerPixel]];
+        [_cachedImageRep setSize:rect.size];
+
+        [NSGraphicsContext saveGraphicsState];
+        [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithBitmapImageRep:_cachedImageRep]];
         
         NSRect drawRect = NSMakeRect(0.0f, 0.0f, _cachedImageSize.width, _cachedImageSize.height);
 
         [[NSColor clearColor] setFill];
         NSRectFill(drawRect);
-
         
         
-#if USE_RH_NINE_PART
+#if USE_RH_NINE_PART_IMAGE
         BOOL shouldTile = (_resizingMode == RHResizableImageResizingModeTile);
         RHDrawNinePartImage(drawRect,
                             [_imagePieces objectAtIndex:0], [_imagePieces objectAtIndex:1], [_imagePieces objectAtIndex:2],
@@ -171,27 +200,26 @@ const RHEdgeInsets RHEdgeInsetsZero = {0.0f, 0.0f, 0.0f, 0.0f};
         
         //if we want a center stretch, we need to draw this separately, clearing center first
         //also note that this only stretches the center, if you also want all sides stretched,
-        // you should use RHDrawNinePartImage() via USE_RH_NINE_PART = 1
+        // you should use RHDrawNinePartImage() via USE_RH_NINE_PART_IMAGE = 1
         BOOL shouldStretch = (_resizingMode == RHResizableImageResizingModeStretch);
         if (shouldStretch){
             NSImage *centerImage = [_imagePieces objectAtIndex:4];
             NSRect centerRect = RHEdgeInsetsInsetRect(drawRect, _capInsets, NO);
             CGContextClearRect([[NSGraphicsContext currentContext] graphicsPort], NSRectToCGRect(centerRect));
-            [centerImage drawInRect:centerRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0f respectFlipped:NO hints:nil];
+            RHDrawStretchedImageInRect(centerImage, centerRect, NSCompositeSourceOver, 1.0f);
         }
 
 #endif
-        
-        [_cachedImage unlockFocus];
-    }
+         [NSGraphicsContext restoreGraphicsState];
+     }
     
-    //finally draw the cached image
+    //finally draw the cached image rep
     fromRect = NSMakeRect(0.0f, 0.0f, _cachedImageSize.width, _cachedImageSize.height);
-    [_cachedImage drawInRect:rect fromRect:fromRect operation:op fraction:requestedAlpha respectFlipped:respectContextIsFlipped hints:hints];
+    [_cachedImageRep drawInRect:rect fromRect:fromRect operation:op fraction:requestedAlpha respectFlipped:respectContextIsFlipped hints:hints];
     
 }
 
--(void)nonStretchedDrawInRect:(NSRect)rect fromRect:(NSRect)fromRect operation:(NSCompositingOperation)op fraction:(CGFloat)requestedAlpha respectFlipped:(BOOL)respectContextIsFlipped hints:(NSDictionary *)hints{
+-(void)originalDrawInRect:(NSRect)rect fromRect:(NSRect)fromRect operation:(NSCompositingOperation)op fraction:(CGFloat)requestedAlpha respectFlipped:(BOOL)respectContextIsFlipped hints:(NSDictionary *)hints{
     return [super drawInRect:rect fromRect:fromRect operation:op fraction:requestedAlpha respectFlipped:respectContextIsFlipped hints:hints];
 }
 
@@ -200,28 +228,46 @@ const RHEdgeInsets RHEdgeInsetsZero = {0.0f, 0.0f, 0.0f, 0.0f};
 
 
 //==========
-#pragma mark - utilites
+#pragma mark - utilities
 
 
 
-NSImage* RHCapturePieceOfImageFromRect(NSImage *image, CGRect rect){
-    NSRect fromRect = NSRectFromCGRect(rect);
-    NSImage *newImage = [[NSImage alloc] initWithSize:fromRect.size];
-    if (newImage.isValid && fromRect.size.width > 0.0f && fromRect.size.height > 0.0f) {
-        NSRect toRect = fromRect;
-        toRect.origin = NSZeroPoint;
-        [newImage lockFocus];
-        //because we override drawInRect method in RHResizableImage, we need to call the super; non stretch implementation
-        if ([image isKindOfClass:[RHResizableImage class]]){
-            [(RHResizableImage*)image nonStretchedDrawInRect:toRect fromRect:fromRect operation:NSCompositeCopy fraction:1.0f respectFlipped:YES hints:nil];
-        } else {
-            [image drawInRect:toRect fromRect:fromRect operation:NSCompositeCopy fraction:1.0f respectFlipped:YES hints:nil];
+
+NSImage* RHImageByReferencingRectOfExistingImage(NSImage *image, NSRect rect){
+    NSImage *newImage = [[NSImage alloc] initWithSize:rect.size];
+    if (!NSIsEmptyRect(rect)){
+        //we operate on all of our NSBitmapImageRep representations; otherwise we loose either @1x or @2x representation
+        for (NSBitmapImageRep *rep in image.representations) {
+            //skip and non bitmap image reps
+            if (![rep isKindOfClass:[NSBitmapImageRep class]]) continue;
+            
+            //scale the captureRect for the current representation because CGImage only works in pixels
+            CGFloat scaleFactor =  rep.pixelsHigh / rep.size.height;
+            CGRect captureRect = CGRectMake(scaleFactor * rect.origin.x, scaleFactor * rect.origin.y, scaleFactor * rect.size.width, scaleFactor * rect.size.height);
+            
+            //flip our y axis, because CGImage's origin is top-left
+            captureRect.origin.y = rep.pixelsHigh - captureRect.origin.y - captureRect.size.height;
+            
+            CGImageRef cgImage = CGImageCreateWithImageInRect(rep.CGImage, captureRect);
+            if (!cgImage){
+                NSLog(@"RHImageByReferencingRectOfExistingImage: Error: Failed to create CGImage with CGImageCreateWithImageInRect() for imageRep:%@, rect:%@.", rep, NSStringFromRect(NSRectFromCGRect(captureRect)));
+                continue;
+            }
+            
+            //create a new BitmapImageRep for the new CGImage. The CGImage just points to the large image, so no pixels are copied by this operation
+            NSBitmapImageRep *newRep = [[NSBitmapImageRep alloc] initWithCGImage:cgImage];
+            [newRep setSize:rect.size];
+            CGImageRelease(cgImage);
+            [newImage addRepresentation:newRep];
+            arc_release(newRep);
         }
-        [newImage unlockFocus];
     }
     
+    [newImage recache];
     return arc_autorelease(newImage);
+    
 }
+
 
 NSArray* RHNinePartPiecesFromImageWithInsets(NSImage *image, RHEdgeInsets capInsets){
     
@@ -233,25 +279,29 @@ NSArray* RHNinePartPiecesFromImageWithInsets(NSImage *image, RHEdgeInsets capIns
     CGFloat rightCapWidth = capInsets.right;
     CGFloat bottomCapHeight = capInsets.bottom;
     
-    CGSize centerSize = CGSizeMake(imageWidth - leftCapWidth - rightCapWidth, imageHeight - topCapHeight - bottomCapHeight);
+    NSSize centerSize = NSMakeSize(imageWidth - leftCapWidth - rightCapWidth, imageHeight - topCapHeight - bottomCapHeight);
     
     
-    NSImage *topLeftCorner = RHCapturePieceOfImageFromRect(image, CGRectMake(0.0f, imageHeight - topCapHeight, leftCapWidth, topCapHeight));
-    NSImage *topEdgeFill = RHCapturePieceOfImageFromRect(image, CGRectMake(leftCapWidth, imageHeight - topCapHeight, centerSize.width, topCapHeight));
-    NSImage *topRightCorner = RHCapturePieceOfImageFromRect(image, CGRectMake(imageWidth - rightCapWidth, imageHeight - topCapHeight, rightCapWidth, topCapHeight));
+    NSImage *topLeftCorner = RHImageByReferencingRectOfExistingImage(image, NSMakeRect(0.0f, imageHeight - topCapHeight, leftCapWidth, topCapHeight));
+    NSImage *topEdgeFill = RHImageByReferencingRectOfExistingImage(image, NSMakeRect(leftCapWidth, imageHeight - topCapHeight, centerSize.width, topCapHeight));
+    NSImage *topRightCorner = RHImageByReferencingRectOfExistingImage(image, NSMakeRect(imageWidth - rightCapWidth, imageHeight - topCapHeight, rightCapWidth, topCapHeight));
     
-    NSImage *leftEdgeFill = RHCapturePieceOfImageFromRect(image, CGRectMake(0.0f, bottomCapHeight, leftCapWidth, centerSize.height));
-    NSImage *centerFill = RHCapturePieceOfImageFromRect(image, CGRectMake(leftCapWidth, bottomCapHeight, centerSize.width, centerSize.height));
-    NSImage *rightEdgeFill = RHCapturePieceOfImageFromRect(image, CGRectMake(imageWidth - rightCapWidth, bottomCapHeight, rightCapWidth, centerSize.height));
+    NSImage *leftEdgeFill = RHImageByReferencingRectOfExistingImage(image, NSMakeRect(0.0f, bottomCapHeight, leftCapWidth, centerSize.height));
+    NSImage *centerFill = RHImageByReferencingRectOfExistingImage(image, NSMakeRect(leftCapWidth, bottomCapHeight, centerSize.width, centerSize.height));
+    NSImage *rightEdgeFill = RHImageByReferencingRectOfExistingImage(image, NSMakeRect(imageWidth - rightCapWidth, bottomCapHeight, rightCapWidth, centerSize.height));
     
-    NSImage *bottomLeftCorner = RHCapturePieceOfImageFromRect(image, CGRectMake(0.0f, 0.0f, leftCapWidth, bottomCapHeight));
-    NSImage *bottomEdgeFill = RHCapturePieceOfImageFromRect(image, CGRectMake(leftCapWidth, 0.0f, centerSize.width, bottomCapHeight));
-    NSImage *bottomRightCorner = RHCapturePieceOfImageFromRect(image, CGRectMake(imageWidth - rightCapWidth, 0.0f, rightCapWidth, bottomCapHeight));
+    NSImage *bottomLeftCorner = RHImageByReferencingRectOfExistingImage(image, NSMakeRect(0.0f, 0.0f, leftCapWidth, bottomCapHeight));
+    NSImage *bottomEdgeFill = RHImageByReferencingRectOfExistingImage(image, NSMakeRect(leftCapWidth, 0.0f, centerSize.width, bottomCapHeight));
+    NSImage *bottomRightCorner = RHImageByReferencingRectOfExistingImage(image, NSMakeRect(imageWidth - rightCapWidth, 0.0f, rightCapWidth, bottomCapHeight));
     
     return [NSArray arrayWithObjects:topLeftCorner, topEdgeFill, topRightCorner, leftEdgeFill, centerFill, rightEdgeFill, bottomLeftCorner, bottomEdgeFill, bottomRightCorner, nil];
 }
 
 
+CGFloat RHContextGetDeviceScale(CGContextRef context){
+    CGSize backingSize = CGContextConvertSizeToDeviceSpace(context, CGSizeMake(1.0f, 1.0f));
+    return backingSize.width;
+}
 
 //==========
 #pragma mark - nine part
@@ -268,20 +318,19 @@ void RHDrawNinePartImage(NSRect frame, NSImage *topLeftCorner, NSImage *topEdgeF
     CGFloat rightCapWidth = bottomRightCorner.size.width;
     CGFloat bottomCapHeight = bottomRightCorner.size.height;
     
-    CGSize centerSize = CGSizeMake(imageWidth - leftCapWidth - rightCapWidth, imageHeight - topCapHeight - bottomCapHeight);
-
+    NSSize centerSize = NSMakeSize(imageWidth - leftCapWidth - rightCapWidth, imageHeight - topCapHeight - bottomCapHeight);
     
-    CGRect topLeftCornerRect = CGRectMake(0.0f, imageHeight - topCapHeight, leftCapWidth, topCapHeight);
-    CGRect topEdgeFillRect = CGRectMake(leftCapWidth, imageHeight - topCapHeight, centerSize.width, topCapHeight);
-    CGRect topRightCornerRect = CGRectMake(imageWidth - rightCapWidth, imageHeight - topCapHeight, rightCapWidth, topCapHeight);
+    NSRect topLeftCornerRect = NSMakeRect(0.0f, imageHeight - topCapHeight, leftCapWidth, topCapHeight);
+    NSRect topEdgeFillRect = NSMakeRect(leftCapWidth, imageHeight - topCapHeight, centerSize.width, topCapHeight);
+    NSRect topRightCornerRect = NSMakeRect(imageWidth - rightCapWidth, imageHeight - topCapHeight, rightCapWidth, topCapHeight);
     
-    CGRect leftEdgeFillRect = CGRectMake(0.0f, bottomCapHeight, leftCapWidth, centerSize.height);
-    CGRect centerFillRect = CGRectMake(leftCapWidth, bottomCapHeight, centerSize.width, centerSize.height);
-    CGRect rightEdgeFillRect = CGRectMake(imageWidth - rightCapWidth, bottomCapHeight, rightCapWidth, centerSize.height);
+    NSRect leftEdgeFillRect = NSMakeRect(0.0f, bottomCapHeight, leftCapWidth, centerSize.height);
+    NSRect centerFillRect = NSMakeRect(leftCapWidth, bottomCapHeight, centerSize.width, centerSize.height);
+    NSRect rightEdgeFillRect = NSMakeRect(imageWidth - rightCapWidth, bottomCapHeight, rightCapWidth, centerSize.height);
     
-    CGRect bottomLeftCornerRect = CGRectMake(0.0f, 0.0f, leftCapWidth, bottomCapHeight);
-    CGRect bottomEdgeFillRect = CGRectMake(leftCapWidth, 0.0f, centerSize.width, bottomCapHeight);
-    CGRect bottomRightCornerRect = CGRectMake(imageWidth - rightCapWidth, 0.0f, rightCapWidth, bottomCapHeight);
+    NSRect bottomLeftCornerRect = NSMakeRect(0.0f, 0.0f, leftCapWidth, bottomCapHeight);
+    NSRect bottomEdgeFillRect = NSMakeRect(leftCapWidth, 0.0f, centerSize.width, bottomCapHeight);
+    NSRect bottomRightCornerRect = NSMakeRect(imageWidth - rightCapWidth, 0.0f, rightCapWidth, bottomCapHeight);
     
     
     RHDrawImageInRect(topLeftCorner, topLeftCornerRect, op, fraction, NO);
@@ -302,7 +351,7 @@ void RHDrawImageInRect(NSImage* image, NSRect rect, NSCompositingOperation op, C
     if (tile){
         RHDrawTiledImageInRect(image, rect, op, fraction);
     } else {
-        [image drawInRect:rect fromRect:NSZeroRect operation:op fraction:fraction];
+        RHDrawStretchedImageInRect(image, rect, op, fraction);
     }
 }
 
@@ -313,15 +362,32 @@ void RHDrawTiledImageInRect(NSImage* image, NSRect rect, NSCompositingOperation 
     [[NSGraphicsContext currentContext] setCompositingOperation:op];
     CGContextSetAlpha(context, fraction);
     
-    NSRect outRect = rect;
-    CGImageRef imageRef = [image CGImageForProposedRect:&outRect context:NULL hints:NULL];
+    //pass in the images actual size in points rather than rect. This gives us the actual best representation for the current context. if we passed in rect directly, we would always get the @2x representation because NSImage assumes more pixels are always better.
+    NSRect outRect = NSMakeRect(0.0f, 0.0f, image.size.width, image.size.height);
+    CGImageRef imageRef = [image CGImageForProposedRect:&outRect context:[NSGraphicsContext currentContext] hints:NULL];
     
-    CGContextClipToRect(context, NSRectToCGRect(outRect));
+    CGContextClipToRect(context, NSRectToCGRect(rect));
     CGContextDrawTiledImage(context, CGRectMake(rect.origin.x, rect.origin.y, image.size.width, image.size.height), imageRef);
     
     CGContextRestoreGState(context);
 }
 
+void RHDrawStretchedImageInRect(NSImage* image, NSRect rect, NSCompositingOperation op, CGFloat fraction){
+    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    CGContextSaveGState(context);
+    
+    [[NSGraphicsContext currentContext] setCompositingOperation:op];
+    CGContextSetAlpha(context, fraction);
+    
+    //we pass in the images actual size rather than rect. if we passed in rect directly, we would always get the @2x ref. (10.8s workaround for single axis stretching was -[NSImage matchesOnlyOnBestFittingAxis], however this wont work for stretching in 2 dimensions)
+    NSRect outRect = NSMakeRect(0.0f, 0.0f, image.size.width, image.size.height);
+    CGImageRef imageRef = [image CGImageForProposedRect:&outRect context:[NSGraphicsContext currentContext] hints:NULL];
+    
+    CGContextClipToRect(context, NSRectToCGRect(rect));
+    CGContextDrawImage(context, rect, imageRef);
+    
+    CGContextRestoreGState(context);
+}
 
 
 

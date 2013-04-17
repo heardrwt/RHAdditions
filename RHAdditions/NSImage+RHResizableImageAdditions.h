@@ -26,8 +26,20 @@
 //  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Adds a class and category on NSImage that allows for super easy NSDrawNinePartImage drawing.
-// Attempts to mirror the iOS5+ resizableImage methods somewhat.
+// Adds a class and category on NSImage that allows for super easy NSDrawNinePartImage
+// drawing. It also provides a re-implementation of NSDrawNinePartImage that
+// handles stretching and tiling in all directions. We attempt to mirror the
+// iOS5+ resizableImage methods somewhat and the code has been tested on OS X 10.8
+// in both StandardDPI and HiDPI modes.
+
+//if enabled, we use RHDrawNinePartImage() instead of NSDrawNinePartImage() to draw your resizable images.
+//(RHDrawNinePartImage() supports stretching for all pieces; RHDrawNinePartImage() only supports stretching for the center piece.)
+#ifndef USE_RH_NINE_PART_IMAGE
+    #define USE_RH_NINE_PART_IMAGE 0
+#endif
+
+
+
 
 #import <Cocoa/Cocoa.h>
 
@@ -50,12 +62,17 @@ typedef enum NSInteger {
 
 @interface NSImage (RHResizableImageAdditions)
 
--(RHResizableImage*)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(CGFloat)topCapHeight; // right cap is calculated as width - leftCapWidth - 1; bottom cap is calculated as height - topCapWidth - 1;
-
 -(RHResizableImage*)resizableImageWithCapInsets:(RHEdgeInsets)capInsets; //create a resizable version of this image. the interior is tiled when drawn.
 -(RHResizableImage*)resizableImageWithCapInsets:(RHEdgeInsets)capInsets resizingMode:(RHResizableImageResizingMode)resizingMode; //the interior is resized according to the resizingMode
 
+-(RHResizableImage*)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(CGFloat)topCapHeight; // right cap is calculated as width - leftCapWidth - 1; bottom cap is calculated as height - topCapWidth - 1;
+
+
+-(void)drawTiledInRect:(NSRect)rect operation:(NSCompositingOperation)op fraction:(CGFloat)delta;
+-(void)drawStretchedInRect:(NSRect)rect operation:(NSCompositingOperation)op fraction:(CGFloat)delta;
+
 @end
+
 
 
 @interface RHResizableImage : NSImage {
@@ -65,8 +82,9 @@ typedef enum NSInteger {
     
     NSArray *_imagePieces;
     
-    NSImage* _cachedImage;
+    NSBitmapImageRep *_cachedImageRep;
     NSSize _cachedImageSize;
+    CGFloat _cachedImageDeviceScale;
 }
 
 -(id)initWithImage:(NSImage*)image leftCapWidth:(CGFloat)leftCapWidth topCapHeight:(CGFloat)topCapHeight; // right cap is calculated as width - leftCapWidth - 1; bottom cap is calculated as height - topCapWidth - 1;
@@ -82,20 +100,21 @@ typedef enum NSInteger {
 -(void)drawInRect:(NSRect)rect operation:(NSCompositingOperation)op fraction:(CGFloat)requestedAlpha respectFlipped:(BOOL)respectContextIsFlipped hints:(NSDictionary *)hints;
 -(void)drawInRect:(NSRect)rect fromRect:(NSRect)fromRect operation:(NSCompositingOperation)op fraction:(CGFloat)requestedAlpha respectFlipped:(BOOL)respectContextIsFlipped hints:(NSDictionary *)hints;
 
--(void)nonStretchedDrawInRect:(NSRect)rect fromRect:(NSRect)fromRect operation:(NSCompositingOperation)op fraction:(CGFloat)requestedAlpha respectFlipped:(BOOL)respectContextIsFlipped hints:(NSDictionary *)hints; //super passthrough
+-(void)originalDrawInRect:(NSRect)rect fromRect:(NSRect)fromRect operation:(NSCompositingOperation)op fraction:(CGFloat)requestedAlpha respectFlipped:(BOOL)respectContextIsFlipped hints:(NSDictionary *)hints; //super passthrough
 
 
 @end
 
 //utilities
-extern NSImage* RHCapturePieceOfImageFromRect(NSImage *image, CGRect rect);
+extern NSImage* RHImageByReferencingRectOfExistingImage(NSImage *image, NSRect rect);
 extern NSArray* RHNinePartPiecesFromImageWithInsets(NSImage *image, RHEdgeInsets capInsets);
-
+extern CGFloat RHContextGetDeviceScale(CGContextRef context);
 
 //nine part
 extern void RHDrawNinePartImage(NSRect frame, NSImage *topLeftCorner, NSImage *topEdgeFill, NSImage *topRightCorner, NSImage *leftEdgeFill, NSImage *centerFill, NSImage *rightEdgeFill, NSImage *bottomLeftCorner, NSImage *bottomEdgeFill, NSImage *bottomRightCorner, NSCompositingOperation op, CGFloat alphaFraction, BOOL shouldTile);
 
 extern void RHDrawImageInRect(NSImage* image, NSRect rect, NSCompositingOperation op, CGFloat fraction, BOOL tile);
 extern void RHDrawTiledImageInRect(NSImage* image, NSRect rect, NSCompositingOperation op, CGFloat fraction);
+extern void RHDrawStretchedImageInRect(NSImage* image, NSRect rect, NSCompositingOperation op, CGFloat fraction);
 
 
