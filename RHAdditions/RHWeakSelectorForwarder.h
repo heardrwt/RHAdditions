@@ -40,13 +40,23 @@
 #import "RHARCSupport.h"
 
 @interface RHWeakSelectorForwarder : NSObject {
-    __unsafe_unretained id _target;
+
+#if ARC_IS_ENABLED
+    __weak id _target;
+#else
+    id _target;
+#endif
+    
     BOOL _invalidated;
 }
 
 -(id)initWithTarget:(id)target; //designated initialiser
 
-@property (nonatomic, assign) id target;
+#if ARC_IS_ENABLED
+    @property (nonatomic, weak) id target;
+#else
+    @property (nonatomic, assign) id target;
+#endif
 
 -(void)invalidate; //nils the target; must be called before target goes away, i.e. from inside targets dealloc method
 -(BOOL)isValid;

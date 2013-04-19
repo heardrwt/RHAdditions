@@ -36,6 +36,7 @@
 -(id)initWithTarget:(id)target{
     self = [super init];
     if (self){
+        if (!_target) [NSException raise:NSInternalInconsistencyException format:@"Error: Unable to create an RHWeakSelectorForwarder instance with a nil target."];
         _target = target;
     }
     return self;
@@ -53,21 +54,22 @@
 //the default method forwarding technique that is used when all is well. (faster than invocations). Once invalidated we fall through to the methodSignatureForSelector: && forwardInvocation: methods below.
 -(id)forwardingTargetForSelector:(SEL)aSelector{
     if (_invalidated) return nil;
-    return _target; //if target is nil, i.e. someone forgot to set it, we fall through to methodSignatureForSelector which then falls through to forwardInvocation:, which raises an appropriate error.
+    return _target; //if target is nil, we fall through to methodSignatureForSelector which then falls through to forwardInvocation:, which logs an appropriate error.
 }
 
 
 #pragma mark - Forwarding mechanics.
 
 -(NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector{
+    id target = _target;
     
-    if (_invalidated || !_target){
+    if (_invalidated || !target){
         //make one up, (this is to force a call to forwardInvocation) its never actually used by forwardInvocation, however this allows us to ignore/raise for the erroneous call.
         return [NSMethodSignature signatureWithObjCTypes:[[NSString stringWithFormat:@"%s%s%s", @encode(void), @encode(id), @encode(SEL)] UTF8String]];
     }
     
     //query the target, if it succeeds, return it, default forwarding flow
-    NSMethodSignature *targetSignature = [_target methodSignatureForSelector:aSelector];
+    NSMethodSignature *targetSignature = [target methodSignatureForSelector:aSelector];
     if (targetSignature) return targetSignature;
     
     //default behaviour
@@ -77,22 +79,23 @@
 
 -(void)forwardInvocation:(NSInvocation *)anInvocation{
     SEL selector = [anInvocation selector];
-
+    id target = _target;
+    
     //if invalidated, complain.
     if (_invalidated){
         NSLog(@"Error: %@, which has been invalidated was asked to forward a method '%s'. Ignoring. Did you forget to invalidate your NSTimer?", self, sel_getName(selector));
         return;
     }
     
-    //if no target, complain
-    if (!_target){
-        [NSException raise:NSInternalInconsistencyException format:@"Error: %@ was asked to forward method '%s' to a nil target.", self, sel_getName(selector)];
+    //if no target, complain (this could happen under ARC, due to the __weak _target variable declaration)
+    if (!target){
+        NSLog(@"Error: %@ was asked to forward a method '%s' to a nil target.", self, sel_getName(selector));
         return;
     }
     
     
     //otherwise let _target deal with it in an appropriate manor, ie raise an exception or handle it.
-    [anInvocation invokeWithTarget:_target];
+    [anInvocation invokeWithTarget:target];
 
 }
 
