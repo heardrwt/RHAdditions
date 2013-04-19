@@ -1,9 +1,8 @@
 //
-//  RHAdditions.h
-//  RHAdditions
+//  RHWeakSelectorForwarder.h
 //
-//  Created by Richard Heard on 7/04/13.
-//  Copyright (c) 2013 Richard Heard. All rights reserved.
+//  Created by Richard Heard on 9/09/12.
+//  Copyright (c) 2012 Richard Heard. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions
@@ -26,48 +25,31 @@
 //  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 //  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// A class that maintains a weak pointer to an object, and forwards any methods
+// called on it to its target.
+//
+// This is useful when you have an NSTimer inside a long lived controller,
+// that must run until dealloc'd. (to avoid retain cycles)
+//
+// We have the timer retain our forwarding object which holds a weak pointer
+// to ourselves, hence breaking any retain cycle.
 
 
-#ifdef __APPLE__
-#import "TargetConditionals.h"
-#endif
-
-
-//common
+#import <Foundation/Foundation.h>
 #import "RHARCSupport.h"
-#import "RHLoggingSupport.h"
 
-#import "NSArray+RHFirstObjectAdditions.h"
-#import "NSDate+RHCalendarAdditions.h"
-#import "NSObject+RHClassInfoAdditions.h"
-#import "NSString+RHNumberAdditions.h"
-#import "NSString+RHRot13Additions.h"
-#import "NSString+RHURLEncodingAdditions.h"
-#import "NSThread+RHBlockAdditions.h"
-#import "RHWeakSelectorForwarder.h"
+@interface RHWeakSelectorForwarder : NSObject {
+    __unsafe_unretained id _target;
+    BOOL _invalidated;
+}
 
+-(id)initWithTarget:(id)target; //designated initialiser
 
-#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
-//ios only
-#import "UIApplication+RHStatusBarBoundsAdditions.h"
-#import "UIColor+RHInterpolationAdditions.h"
-#import "UIDevice+RHDeviceIdentifierAdditions.h"
-#import "UIImage+RHComparingAdditions.h"
-#import "UIImage+RHPixelAdditions.h"
-#import "UIImage+RHResizingAdditions.h"
-#import "UILabel+RHSizeAdditions.h"
-#import "UIView+RHCompletedActionBadgeAdditions.h"
-#import "UIView+RHSnapshotAdditions.h"
+@property (nonatomic, assign) id target;
 
-#else
-//mac only
-#import "NSBundle+RHLaunchAtLoginAdditions.h"
-#import "NSImage+RHImageRepresentationAdditions.h"
-#import "NSImage+RHResizableImageAdditions.h"
-#import "NSView+RHSnapshotAdditions.h"
-#import "NSWindow+RHPreventCaptureAdditions.h"
-#import "NSWindow+RHResizeAdditions.h"
-#import "RHGetBSDProcessList.h"
+-(void)invalidate; //nils the target; must be called before target goes away, i.e. from inside targets dealloc method
+-(BOOL)isValid;
 
-#endif
+@end
 
