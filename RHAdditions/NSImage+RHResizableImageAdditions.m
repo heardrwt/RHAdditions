@@ -54,6 +54,18 @@ extern BOOL RHEdgeInsetsEqualToEdgeInsets(RHEdgeInsets insets1, RHEdgeInsets ins
 
 const RHEdgeInsets RHEdgeInsetsZero = {0.0f, 0.0f, 0.0f, 0.0f};
 
+NSString *NSStringFromRHEdgeInsets(RHEdgeInsets insets){
+    return [NSString stringWithFormat:@"{%lg,%lg,%lg,%lg}", insets.top, insets.left, insets.bottom, insets.right];
+}
+
+RHEdgeInsets RHEdgeInsetsFromString(NSString* string){
+    RHEdgeInsets result = RHEdgeInsetsZero;
+    if(string != nil && [string respondsToSelector:@selector(cStringUsingEncoding:)]){
+        sscanf([string cStringUsingEncoding:NSUTF8StringEncoding], "{%lg,%lg,%lg,%lg}", &result.top, &result.left, &result.bottom, &result.right);
+    }
+    return result;
+}
+
 
 
 //==========

@@ -34,12 +34,10 @@
 
 //if enabled, we use RHDrawNinePartImage() instead of NSDrawNinePartImage() to draw your resizable images.
 //(RHDrawNinePartImage() supports stretching for all pieces; RHDrawNinePartImage() only supports stretching for the center piece.)
+
 #ifndef USE_RH_NINE_PART_IMAGE
     #define USE_RH_NINE_PART_IMAGE 0
 #endif
-
-
-
 
 #import <Cocoa/Cocoa.h>
 
@@ -53,6 +51,9 @@ extern RHEdgeInsets RHEdgeInsetsMake(CGFloat top, CGFloat left, CGFloat bottom, 
 extern CGRect RHEdgeInsetsInsetRect(CGRect rect, RHEdgeInsets insets, BOOL flipped); //if flipped origin is top-left otherwise origin is bottom-left (OSX Default is NO)
 extern BOOL RHEdgeInsetsEqualToEdgeInsets(RHEdgeInsets insets1, RHEdgeInsets insets2);
 extern const RHEdgeInsets RHEdgeInsetsZero;
+
+extern NSString *NSStringFromRHEdgeInsets(RHEdgeInsets insets);
+extern RHEdgeInsets RHEdgeInsetsFromString(NSString* string);
 
 
 typedef enum NSInteger {
