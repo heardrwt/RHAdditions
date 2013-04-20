@@ -180,16 +180,28 @@ RHEdgeInsets RHEdgeInsetsFromString(NSString* string){
                             pixelsHigh:_cachedImageSize.height * _cachedImageDeviceScale
                             bitsPerSample:8
                             samplesPerPixel:4
-                            hasAlpha:[[[self representations] lastObject] hasAlpha]
-                            isPlanar:[[[self representations] lastObject] isPlanar]
+                            hasAlpha:YES
+                            isPlanar:NO
                             colorSpaceName:[[[self representations] lastObject] colorSpaceName]
                             bytesPerRow:0
-                            bitsPerPixel:[[[self representations] lastObject] bitsPerPixel]];
+                            bitsPerPixel:32];
         [_cachedImageRep setSize:rect.size];
 
-        [NSGraphicsContext saveGraphicsState];
-        [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithBitmapImageRep:_cachedImageRep]];
+        if (!_cachedImageRep){
+            NSLog(@"Error: failed to create NSBitmapImageRep from rep: %@", [[self representations] lastObject]);
+            return;
+        }
         
+        NSGraphicsContext *newContext = [NSGraphicsContext graphicsContextWithBitmapImageRep:_cachedImageRep];
+        if (!newContext){
+            NSLog(@"Error: failed to create NSGraphicsContext from rep: %@", _cachedImageRep);
+            arc_release_nil(_cachedImageRep);
+            return;
+        }
+        
+        [NSGraphicsContext saveGraphicsState];
+        [NSGraphicsContext setCurrentContext:newContext];
+
         NSRect drawRect = NSMakeRect(0.0f, 0.0f, _cachedImageSize.width, _cachedImageSize.height);
 
         [[NSColor clearColor] setFill];
