@@ -27,6 +27,8 @@
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+#if defined(INCLUDE_PRIVATE_API) && INCLUDE_PRIVATE_API
+
 #import "NSWindow+RHPreventCaptureAdditions.h"
 
 @implementation NSWindow (RHPreventCaptureAdditions)
@@ -88,3 +90,4 @@ BOOL RHPreventWindowCaptureForWindow(NSWindow *window){
     return YES;
 }
 
+#endif

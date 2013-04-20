@@ -32,6 +32,10 @@
 #import "TargetConditionals.h"
 #endif
 
+//don't include private stuff in App Store builds
+#if !defined(INCLUDE_PRIVATE_API)
+#define INCLUDE_PRIVATE_API 0
+#endif
 
 //common
 #import "RHARCSupport.h"

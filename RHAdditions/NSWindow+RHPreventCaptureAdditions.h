@@ -30,6 +30,8 @@
 // WARNING WARNING WARNING: This uses PRIVATE CGS APIs. Use at your own risk.
 // Not recommended to be shipped in production apps.
 
+#if defined(INCLUDE_PRIVATE_API) && INCLUDE_PRIVATE_API
+
 #import <Cocoa/Cocoa.h>
 #import <Carbon/Carbon.h>
 
@@ -39,3 +41,5 @@
 
 extern BOOL RHPreventWindowCaptureForWindow(NSWindow *window);
 
+
+#endif
