@@ -36,7 +36,7 @@
 -(id)initWithTarget:(id)target{
     self = [super init];
     if (self){
-        if (!_target) [NSException raise:NSInternalInconsistencyException format:@"Error: Unable to create an RHWeakSelectorForwarder instance with a nil target."];
+        if (!target) [NSException raise:NSInternalInconsistencyException format:@"Error: Unable to create an RHWeakSelectorForwarder instance with a nil target."];
         _target = target;
     }
     return self;
