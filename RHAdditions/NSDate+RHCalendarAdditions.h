@@ -41,6 +41,10 @@
 //components
 -(NSDateComponents*)componentsForGregorianCalendar;
 
+//seconds
+-(NSDate*)dateByAddingSeconds:(NSInteger)seconds;
+-(NSInteger)secondsBetweenDates:(NSDate*)otherDate;
+
 //days
 -(NSDate*)dateByAddingDays:(NSInteger)days;
 -(NSInteger)daysBetweenDates:(NSDate*)otherDate;

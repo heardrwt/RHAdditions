@@ -68,6 +68,19 @@
     return [[NSCalendar gregorianCalendar] components:components fromDate:self];
 }
 
+//seconds
+-(NSDate*)dateByAddingSeconds:(NSInteger)seconds{
+    NSDateComponents *components = [[[NSDateComponents alloc] init] autorelease];
+    [components setSecond:seconds];
+    
+    return [[NSCalendar gregorianCalendar] dateByAddingComponents:components toDate:self options:0];
+}
+
+-(NSInteger)secondsBetweenDates:(NSDate*)otherDate{
+    NSDateComponents *components = [[NSCalendar gregorianCalendar] components:NSSecondCalendarUnit fromDate:self toDate:otherDate options:0];
+    return ABS(components.second);
+}
+
 //days
 -(NSDate*)dateByAddingDays:(NSInteger)days{
     NSDateComponents *components = [[[NSDateComponents alloc] init] autorelease];
