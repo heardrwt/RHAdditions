@@ -1,8 +1,7 @@
 //
-//  RHAdditions.h
-//  RHAdditions
+//  NSImageView+RHImageLoadingAdditions.h
 //
-//  Created by Richard Heard on 7/04/13.
+//  Created by Richard Heard on 2/05/13.
 //  Copyright (c) 2013 Richard Heard. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
@@ -26,53 +25,21 @@
 //  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 //  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Adds async image loading support to NSImageView
 
+#import <Cocoa/Cocoa.h>
 
-#ifdef __APPLE__
-#import "TargetConditionals.h"
-#endif
+@interface NSImageView (RHImageLoadingAdditions)
 
-//don't include private stuff in App Store builds
-#if !defined(INCLUDE_PRIVATE_API)
-#define INCLUDE_PRIVATE_API 0
-#endif
+@property (nonatomic, retain) NSImage *placeholderImage;
+@property (nonatomic, retain) NSImage *errorImage;
+@property (nonatomic, assign) BOOL showsLoadingSpinner;
 
-//common
-#import "RHARCSupport.h"
-#import "RHLoggingSupport.h"
+-(void)setImageWithContentsOfURL:(NSURL*)url;
+-(void)setImageWithContentsOfURL:(NSURL*)url placeholderImage:(NSImage*)placeholderImage;
+-(void)setImageWithContentsOfURL:(NSURL*)url placeholderImage:(NSImage*)placeholderImage errorImage:(NSImage*)errorImage;
 
-#import "NSArray+RHFirstObjectAdditions.h"
-#import "NSDate+RHCalendarAdditions.h"
-#import "NSObject+RHClassInfoAdditions.h"
-#import "NSString+RHNumberAdditions.h"
-#import "NSString+RHRot13Additions.h"
-#import "NSString+RHURLEncodingAdditions.h"
-#import "NSThread+RHBlockAdditions.h"
-#import "RHWeakSelectorForwarder.h"
+-(void)stopFetchingImage;
 
-
-#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
-//ios only
-#import "UIApplication+RHStatusBarBoundsAdditions.h"
-#import "UIColor+RHInterpolationAdditions.h"
-#import "UIDevice+RHDeviceIdentifierAdditions.h"
-#import "UIImage+RHComparingAdditions.h"
-#import "UIImage+RHPixelAdditions.h"
-#import "UIImage+RHResizingAdditions.h"
-#import "UILabel+RHSizeAdditions.h"
-#import "UIView+RHCompletedActionBadgeAdditions.h"
-#import "UIView+RHSnapshotAdditions.h"
-
-#else
-//mac only
-#import "NSBundle+RHLaunchAtLoginAdditions.h"
-#import "NSImage+RHImageRepresentationAdditions.h"
-#import "NSImage+RHResizableImageAdditions.h"
-#import "NSImageView+RHImageLoadingAdditions.h"
-#import "NSView+RHSnapshotAdditions.h"
-#import "NSWindow+RHPreventCaptureAdditions.h"
-#import "NSWindow+RHResizeAdditions.h"
-#import "RHGetBSDProcessList.h"
-
-#endif
-
+@end
