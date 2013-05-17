@@ -35,6 +35,12 @@
     return [(NSString*)RHCreateStringByURLEncodingStringWithEncoding((CFStringRef)self, CFStringConvertNSStringEncodingToEncoding(encoding)) autorelease];
 }
 
+-(NSString*)stringByFormURLEncodingStringWithEncoding:(NSStringEncoding)encoding{
+    NSString *string = [(NSString*)RHCreateStringByURLEncodingStringWithEncoding((CFStringRef)self, CFStringConvertNSStringEncodingToEncoding(encoding)) autorelease];
+    return [string stringByReplacingOccurrencesOfString:@"%20" withString:@"+"];
+}
+
+
 @end
 
 extern CFStringRef RHCreateStringByURLEncodingStringWithEncoding(CFStringRef string, CFStringEncoding encoding){

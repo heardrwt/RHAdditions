@@ -32,7 +32,7 @@
 @interface NSString (RHURLEncodingAdditions)
 
 -(NSString*)stringByURLEncodingStringWithEncoding:(NSStringEncoding)encoding;
-
+-(NSString*)stringByFormURLEncodingStringWithEncoding:(NSStringEncoding)encoding; //x-www-form-urlencoded. (+ instead of %20)
 
 @end
 

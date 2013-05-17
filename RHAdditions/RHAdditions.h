@@ -48,6 +48,7 @@
 #import "NSString+RHRot13Additions.h"
 #import "NSString+RHURLEncodingAdditions.h"
 #import "NSThread+RHBlockAdditions.h"
+#import "NSUserDefaults+RHColorAdditions.h"
 #import "RHWeakSelectorForwarder.h"
 
 

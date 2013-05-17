@@ -1,7 +1,7 @@
 //
-//  NSTextField+RHLabelAdditions.m
+//  NSUserDefaults+RHColorAdditions.h
 //
-//  Created by Richard Heard on 6/05/13.
+//  Created by Richard Heard on 8/05/13.
 //  Copyright (c) 2013 Richard Heard. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,25 @@
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "NSTextField+RHLabelAdditions.h"
+#if (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)
+    #import <UIKit/UIKit.h>
+#else
+    #import <Cocoa/Cocoa.h>
+#endif
 
-@implementation NSTextField (RHLabelAdditions)
 
-+(id)newLabelWithFrame:(NSRect)frame{
-    NSTextField *new = [[self alloc] initWithFrame:frame];
-    
-    [new setStringValue:@"New Label"];
-    [new setBezeled:NO];
-    [new setDrawsBackground:NO];
-    [new setEditable:NO];
-    [new setSelectable:NO];
-    [new setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:[[new cell] controlSize]]]];
-    [new.cell setUsesSingleLineMode:YES];
-    [new.cell setTruncatesLastVisibleLine:YES];
+@interface NSUserDefaults (RHColorAdditions)
 
-    return new;
-}
+#if (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)
 
-+(id)newWrappingLabelWithFrame:(NSRect)frame{
-    NSTextField *new = [self newLabelWithFrame:frame];
-    
-    [new.cell setWraps:YES];
-    [new.cell setUsesSingleLineMode:NO];
-    [new.cell setTruncatesLastVisibleLine:NO];
-    
-    return new;
-}
+-(void)setColor:(UIColor*)color forKey:(NSString*)key;
+-(UIColor*)colorForKey:(NSString*)key;
+
+#else
+
+-(void)setColor:(NSColor*)color forKey:(NSString*)key;
+-(NSColor*)colorForKey:(NSString*)key;
+
+#endif
+
 @end
-
-//include an implementation in this file so we don't have to use -load_all for this category to be included in a static lib
-@interface RHFixCategoryBugClassNSTFRHLA : NSObject @end @implementation RHFixCategoryBugClassNSTFRHLA @end
-

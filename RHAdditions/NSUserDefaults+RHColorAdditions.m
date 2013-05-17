@@ -1,7 +1,7 @@
 //
-//  NSTextField+RHLabelAdditions.m
+//  NSUserDefaults+RHColorAdditions.m
 //
-//  Created by Richard Heard on 6/05/13.
+//  Created by Richard Heard on 8/05/13.
 //  Copyright (c) 2013 Richard Heard. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
@@ -27,36 +27,20 @@
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "NSTextField+RHLabelAdditions.h"
+#import "NSUserDefaults+RHColorAdditions.h"
 
-@implementation NSTextField (RHLabelAdditions)
+@implementation NSUserDefaults (RHColorAdditions)
 
-+(id)newLabelWithFrame:(NSRect)frame{
-    NSTextField *new = [[self alloc] initWithFrame:frame];
-    
-    [new setStringValue:@"New Label"];
-    [new setBezeled:NO];
-    [new setDrawsBackground:NO];
-    [new setEditable:NO];
-    [new setSelectable:NO];
-    [new setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:[[new cell] controlSize]]]];
-    [new.cell setUsesSingleLineMode:YES];
-    [new.cell setTruncatesLastVisibleLine:YES];
-
-    return new;
+-(void)setColor:(id)color forKey:(NSString*)key{
+    [self setObject:[NSArchiver archivedDataWithRootObject:color] forKey:key];
 }
 
-+(id)newWrappingLabelWithFrame:(NSRect)frame{
-    NSTextField *new = [self newLabelWithFrame:frame];
-    
-    [new.cell setWraps:YES];
-    [new.cell setUsesSingleLineMode:NO];
-    [new.cell setTruncatesLastVisibleLine:NO];
-    
-    return new;
+-(id)colorForKey:(NSString*)key{
+    NSData *data = [self dataForKey:key];
+    return data ? [NSUnarchiver unarchiveObjectWithData:data] : nil;
 }
+
 @end
 
-//include an implementation in this file so we don't have to use -load_all for this category to be included in a static lib
-@interface RHFixCategoryBugClassNSTFRHLA : NSObject @end @implementation RHFixCategoryBugClassNSTFRHLA @end
+@interface RHFixCategoryBugClassNSUDRHCA : NSObject  @end @implementation RHFixCategoryBugClassNSUDRHCA @end
 
