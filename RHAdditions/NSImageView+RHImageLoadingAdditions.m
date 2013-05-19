@@ -71,7 +71,7 @@
 }
 
 -(void)stopFetchingImage{
-    [self.fetchConnection cancel];
+    //[self.fetchConnection cancel]; //calling cancel is causing an intermittent crash inside of NSURLConnection. Instead, lets check to make sure we have the correct fetchConnection in our delegate callbacks, and if not ignore. (ie ghosting the no longer required connections, but not actually cancelling them)
     self.fetchConnection = nil;
     self.fetchData = nil;
     [self hideSpinner];
@@ -110,11 +110,20 @@ static void * const kRHShowsLoadingSpinnerKey = (void*)&kRHShowsLoadingSpinnerKe
 @implementation NSImageView (RHImageLoadingPrivateAdditions)
 
 #pragma mark - NSURLConnectionDelegate
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
+    if (connection != self.fetchConnection) return; //bail if not our current fetchConnection, ie it's been ghosted
+    
+    //clear our fetched data, because, as per the docs, this can occasionally be called multiple times, in which case it's recommend to clear and previously fetched data.
+    [self.fetchData setLength:0];
+}
+
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    if (connection != self.fetchConnection) return; //bail if not our current fetchConnection, ie it's been ghosted
     [self.fetchData appendData:data];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    if (connection != self.fetchConnection) return; //bail if not our current fetchConnection, ie it's been ghosted
     
     if (self.errorImage) self.image = self.errorImage;
     
@@ -126,6 +135,7 @@ static void * const kRHShowsLoadingSpinnerKey = (void*)&kRHShowsLoadingSpinnerKe
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    if (connection != self.fetchConnection) return; //bail if not our current fetchConnection, ie it's been ghosted
     
     NSImage *image = arc_autorelease([[NSImage alloc] initWithData:self.fetchData]);
     
