@@ -1,7 +1,7 @@
 //
-//  RHLoggingSupport.h
+//  RHLoggingSupport.m
 //
-//  Created by Richard Heard on 3/07/12.
+//  Created by Richard Heard on 22/05/13.
 //  Copyright (c) 2012 Richard Heard. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
@@ -26,26 +26,22 @@
 //  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// logging macros
-//
-// To enable logging by default for debug builds use:
-// #define RH_LOGGING_ALWAYS (defined(DEBUG) && DEBUG)
-//
-// To disable logging permanently use:
-// #define RH_LOGGING_NEVER 1
-//
-// Otherwise set RHLoggingEnabled to YES in NSUserDefaults to selectively enable logging. "defaults write <domain> RHLoggingEnabled -bool yes"
 
-#import <Foundation/Foundation.h>
 
-#if (defined(RH_LOGGING_NEVER) && RH_LOGGING_NEVER)
-    #define RHLog(format, ...)
+
+#if (defined(RH_LOGGING_ALWAYS) && RH_LOGGING_ALWAYS)
+    BOOL _RHLoggingEnabled = YES;
 #else
-    extern BOOL _RHLoggingEnabled;
-    extern void _RHLoggingInit();
-    
-    #define RHLog(format, ...) do{ _RHLoggingInit(); if (__builtin_expect(_RHLoggingEnabled, _RHLoggingEnabled)) NSLog( @"%s:%i %@ ", __PRETTY_FUNCTION__, __LINE__, [NSString stringWithFormat: format, ##__VA_ARGS__]); } while(0)
+    BOOL _RHLoggingEnabled = NO;
 #endif
 
-#define RHErrorLog(format, ...) do{ NSLog( @"%s:%i %@ ", __PRETTY_FUNCTION__, __LINE__, [NSString stringWithFormat: format, ##__VA_ARGS__]); } while (0)
+void _RHLoggingInit(){
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (!_RHLoggingEnabled){
+            _RHLoggingEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"RHLoggingEnabled"];
+        }
+        if (_RHLoggingEnabled) NSLog(@"RHLogging enabled.");
+    });
+}
 
