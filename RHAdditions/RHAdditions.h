@@ -43,6 +43,7 @@
 
 #import "NSArray+RHFirstObjectAdditions.h"
 #import "NSDate+RHCalendarAdditions.h"
+#import "NSJSONSerialization+RHTypeAdditions.h"
 #import "NSObject+RHClassInfoAdditions.h"
 #import "NSString+RHNumberAdditions.h"
 #import "NSString+RHRot13Additions.h"
@@ -50,7 +51,7 @@
 #import "NSThread+RHBlockAdditions.h"
 #import "NSUserDefaults+RHColorAdditions.h"
 #import "RHWeakSelectorForwarder.h"
-
+#import "RHGoogleURLShortener.h"
 
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 //ios only
