@@ -49,14 +49,18 @@
     return arc_autorelease([[[self class] alloc] initWithLongURL:url withCompletion:completion]);
 }
 
--(id)initWithLongURL:(NSURL*)url withCompletion:(RHGoogleURLShortenerCompletionBlock)completion;
-{
+-(id)initWithLongURL:(NSURL*)url withCompletion:(RHGoogleURLShortenerCompletionBlock)completion{
+    if (!url){
+        [NSException raise:NSInvalidArgumentException format:@"Error: longURL must not be nil."];
+        return nil;
+    }
+
     self = [super init];
     if (self) {
 #ifndef RH_GOOGLE_URL_SHORTENER_API_KEY
         [NSException raise:NSInternalInconsistencyException format:@"Error: RH_GOOGLE_URL_SHORTENER_API_KEY must be defined in-order to use the RHGoogleURLShortener Class."];
 #endif
-        
+    
         _originalURL = arc_retain(url);
         _completionBlock = [completion copy];
         
