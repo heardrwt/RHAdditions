@@ -36,6 +36,7 @@
 @property (nonatomic, retain) NSURLConnection *fetchConnection;
 @property (nonatomic, retain) NSMutableData *fetchData;
 @property (nonatomic, retain) NSProgressIndicator *spinner;
+@property (nonatomic, retain) NSURL *contentURL;
 -(void)showSpinner;
 -(void)hideSpinner;
 @end
@@ -51,8 +52,13 @@
 }
 -(void)setImageWithContentsOfURL:(NSURL*)url placeholderImage:(NSImage*)placeholderImage errorImage:(NSImage*)errorImage{
     if (!url) return;
+    
+    //dont refetch, for no reason.
+    if ([self.contentURL isEqualTo:url] && [self.placeholderImage isEqualTo:placeholderImage] && [self.errorImage isEqualTo:errorImage]) return;
+
     self.placeholderImage = placeholderImage;
     self.errorImage = errorImage;
+    self.contentURL = url;
     
     if (self.placeholderImage){
         self.image = self.placeholderImage;
@@ -131,6 +137,7 @@ static void * const kRHShowsLoadingSpinnerKey = (void*)&kRHShowsLoadingSpinnerKe
     
     self.fetchConnection = nil;
     self.fetchData = nil;
+    self.contentURL = nil;
     
 }
 
@@ -174,6 +181,14 @@ static void * const kRHSpinnerKey = (void*)&kRHSpinnerKey;
 }
 -(void)setSpinner:(NSProgressIndicator*)spinner{
     objc_setAssociatedObject(self, kRHSpinnerKey, spinner, OBJC_ASSOCIATION_RETAIN);
+}
+
+static void * const kRHContentURLKey = (void*)&kRHContentURLKey;
+-(NSURL*)contentURL{
+    return objc_getAssociatedObject(self, kRHContentURLKey);
+}
+-(void)setContentURL:(NSURL *)contentURL{
+    objc_setAssociatedObject(self, kRHContentURLKey, contentURL, OBJC_ASSOCIATION_RETAIN);
 }
 
 
