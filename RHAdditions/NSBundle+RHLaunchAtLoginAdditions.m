@@ -64,7 +64,7 @@ extern BOOL RHLaunchAtLoginEnabledForBundleIdentifier(NSString *bundleIdentifier
 
 extern BOOL RHLaunchAtLoginSetEnabledForBundleIdentifier(NSString *bundleIdentifier, BOOL enabled){
     if (!bundleIdentifier) return NO;
-    return SMLoginItemSetEnabled((CFStringRef)bundleIdentifier, enabled);
+    return SMLoginItemSetEnabled((__bridge CFStringRef)bundleIdentifier, enabled);
 }
 
 //include an implementation in this file so we don't have to use -load_all for this category to be included in a static lib

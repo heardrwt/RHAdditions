@@ -33,12 +33,12 @@
 @implementation NSString (RHURLEncodingAdditions)
 
 -(NSString*)stringByURLEncodingStringWithEncoding:(NSStringEncoding)encoding{
-    NSString *string = arc_autorelease((__bridge_transfer NSString*)RHCreateStringByURLEncodingStringWithEncoding((CFStringRef)self, CFStringConvertNSStringEncodingToEncoding(encoding)));
+    NSString *string = arc_autorelease((__bridge_transfer NSString*)RHCreateStringByURLEncodingStringWithEncoding((__bridge CFStringRef)self, CFStringConvertNSStringEncodingToEncoding(encoding)));
     return string;
 }
 
 -(NSString*)stringByFormURLEncodingStringWithEncoding:(NSStringEncoding)encoding{
-    NSString *string = arc_autorelease((__bridge_transfer NSString*)RHCreateStringByURLEncodingStringWithEncoding((CFStringRef)self, CFStringConvertNSStringEncodingToEncoding(encoding)));
+    NSString *string = arc_autorelease((__bridge_transfer NSString*)RHCreateStringByURLEncodingStringWithEncoding((__bridge CFStringRef)self, CFStringConvertNSStringEncodingToEncoding(encoding)));
     return [string stringByReplacingOccurrencesOfString:@"%20" withString:@"+"];
 }
 
