@@ -28,15 +28,17 @@
 //
 
 #import "NSString+RHURLEncodingAdditions.h"
+#import "RHARCSupport.h"
 
 @implementation NSString (RHURLEncodingAdditions)
 
 -(NSString*)stringByURLEncodingStringWithEncoding:(NSStringEncoding)encoding{
-    return [(NSString*)RHCreateStringByURLEncodingStringWithEncoding((CFStringRef)self, CFStringConvertNSStringEncodingToEncoding(encoding)) autorelease];
+    NSString *string = arc_autorelease((__bridge_transfer NSString*)RHCreateStringByURLEncodingStringWithEncoding((CFStringRef)self, CFStringConvertNSStringEncodingToEncoding(encoding)));
+    return string;
 }
 
 -(NSString*)stringByFormURLEncodingStringWithEncoding:(NSStringEncoding)encoding{
-    NSString *string = [(NSString*)RHCreateStringByURLEncodingStringWithEncoding((CFStringRef)self, CFStringConvertNSStringEncodingToEncoding(encoding)) autorelease];
+    NSString *string = arc_autorelease((__bridge_transfer NSString*)RHCreateStringByURLEncodingStringWithEncoding((CFStringRef)self, CFStringConvertNSStringEncodingToEncoding(encoding)));
     return [string stringByReplacingOccurrencesOfString:@"%20" withString:@"+"];
 }
 

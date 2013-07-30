@@ -28,6 +28,7 @@
 //
 
 #import "NSImage+RHImageRepresentationAdditions.h"
+#import "RHARCSupport.h"
 
 @implementation NSImage (RHImageRepresentationAdditions)
 
@@ -62,7 +63,7 @@ NSData* RHImagePNGRepresentationForImage(NSImage* image){
         [image lockFocus];
 
         NSRect rect = NSMakeRect(0, 0, image.size.width, image.size.height);
-        imageRep = [[[NSBitmapImageRep alloc] initWithFocusedViewRect:rect] autorelease];
+        imageRep = arc_autorelease([[NSBitmapImageRep alloc] initWithFocusedViewRect:rect]);
         
         [image unlockFocus];
     }
@@ -81,7 +82,7 @@ NSData* RHImageJPEGRepresentationForImage(NSImage* image, float compressionFacto
         [image lockFocus];
         
         NSRect rect = NSMakeRect(0, 0, image.size.width, image.size.height);
-        imageRep = [[[NSBitmapImageRep alloc] initWithFocusedViewRect:rect] autorelease];
+        imageRep = arc_autorelease([[NSBitmapImageRep alloc] initWithFocusedViewRect:rect]);
         
         [image unlockFocus];
     }
@@ -101,7 +102,7 @@ NSData* RHImageGIFRepresentationForImage(NSImage* image){
         [image lockFocus];
         
         NSRect rect = NSMakeRect(0, 0, image.size.width, image.size.height);
-        imageRep = [[[NSBitmapImageRep alloc] initWithFocusedViewRect:rect] autorelease];
+        imageRep = arc_autorelease([[NSBitmapImageRep alloc] initWithFocusedViewRect:rect]);
         
         [image unlockFocus];
     }

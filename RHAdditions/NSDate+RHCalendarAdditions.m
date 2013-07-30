@@ -28,6 +28,7 @@
 //
 
 #import "NSDate+RHCalendarAdditions.h"
+#import "RHARCSupport.h"
 
 @implementation NSCalendar (RHCalendarAdditions)
 
@@ -70,7 +71,7 @@
 
 //seconds
 -(NSDate*)dateByAddingSeconds:(NSInteger)seconds{
-    NSDateComponents *components = [[[NSDateComponents alloc] init] autorelease];
+    NSDateComponents *components = arc_autorelease([[NSDateComponents alloc] init]);
     [components setSecond:seconds];
     
     return [[NSCalendar gregorianCalendar] dateByAddingComponents:components toDate:self options:0];
@@ -83,7 +84,7 @@
 
 //days
 -(NSDate*)dateByAddingDays:(NSInteger)days{
-    NSDateComponents *components = [[[NSDateComponents alloc] init] autorelease];
+    NSDateComponents *components = arc_autorelease([[NSDateComponents alloc] init]);
     [components setDay:days];
     
     return [[NSCalendar gregorianCalendar] dateByAddingComponents:components toDate:self options:0];
@@ -103,7 +104,7 @@
 
 //months
 -(NSDate*)dateByAddingMonths:(NSInteger)months{
-    NSDateComponents *components = [[[NSDateComponents alloc] init] autorelease];
+    NSDateComponents *components = arc_autorelease([[NSDateComponents alloc] init]);
     [components setMonth:months];
     
     return [[NSCalendar gregorianCalendar] dateByAddingComponents:components toDate:self options:0];

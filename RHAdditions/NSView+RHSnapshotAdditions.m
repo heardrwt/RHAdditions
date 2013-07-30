@@ -28,6 +28,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "RHARCSupport.h"
 
 @implementation NSView (RHSnapshotAdditions)
 
@@ -41,7 +42,7 @@
     NSImage* image = [[NSImage alloc] initWithSize:self.bounds.size];
     [image addRepresentation:imageRep];
     
-    return [image autorelease];
+    return arc_autorelease(image);
 
 }
 

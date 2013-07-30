@@ -228,7 +228,7 @@ RHEdgeInsets RHEdgeInsetsFromString(NSString* string){
         BOOL shouldStretch = (_resizingMode == RHResizableImageResizingModeStretch);
         if (shouldStretch){
             NSImage *centerImage = [_imagePieces objectAtIndex:4];
-            NSRect centerRect = RHEdgeInsetsInsetRect(drawRect, _capInsets, NO);
+            NSRect centerRect = NSRectFromCGRect(RHEdgeInsetsInsetRect(NSRectToCGRect(drawRect), _capInsets, NO));
             CGContextClearRect([[NSGraphicsContext currentContext] graphicsPort], NSRectToCGRect(centerRect));
             RHDrawStretchedImageInRect(centerImage, centerRect, NSCompositeSourceOver, 1.0f);
         }
@@ -408,7 +408,7 @@ void RHDrawStretchedImageInRect(NSImage* image, NSRect rect, NSCompositingOperat
     CGImageRef imageRef = [image CGImageForProposedRect:&outRect context:[NSGraphicsContext currentContext] hints:NULL];
     
     CGContextClipToRect(context, NSRectToCGRect(rect));
-    CGContextDrawImage(context, rect, imageRef);
+    CGContextDrawImage(context, NSRectToCGRect(rect), imageRef);
     
     CGContextRestoreGState(context);
 }
