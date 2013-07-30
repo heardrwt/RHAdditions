@@ -42,7 +42,9 @@
 #import "RHLoggingSupport.h"
 
 #import "NSArray+RHFirstObjectAdditions.h"
+#import "NSArray+RHNumberAdditions.h"
 #import "NSDate+RHCalendarAdditions.h"
+#import "NSDictionary+RHNumberAdditions.h"
 #import "NSJSONSerialization+RHTypeAdditions.h"
 #import "NSObject+RHClassInfoAdditions.h"
 #import "NSString+RHNumberAdditions.h"
