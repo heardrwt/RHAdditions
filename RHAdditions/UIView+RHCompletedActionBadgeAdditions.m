@@ -28,7 +28,7 @@
 //
 
 #import "UIView+RHCompletedActionBadgeAdditions.h"
-#import "RHARCAdditions.h"
+#import "RHARCSupport.h"
 
 @implementation UIView (RHCompletedActionBadgeAdditions)
 
