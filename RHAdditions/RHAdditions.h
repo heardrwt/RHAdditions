@@ -50,8 +50,11 @@
 #import "NSString+RHURLEncodingAdditions.h"
 #import "NSThread+RHBlockAdditions.h"
 #import "NSUserDefaults+RHColorAdditions.h"
+
+//objects
 #import "RHWeakSelectorForwarder.h"
 #import "RHGoogleURLShortener.h"
+#import "RHWeakValue.h"
 
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 //ios only
