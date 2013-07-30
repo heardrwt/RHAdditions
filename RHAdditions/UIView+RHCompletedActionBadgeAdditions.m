@@ -28,6 +28,7 @@
 //
 
 #import "UIView+RHCompletedActionBadgeAdditions.h"
+#import "RHARCAdditions.h"
 
 @implementation UIView (RHCompletedActionBadgeAdditions)
 
@@ -55,7 +56,7 @@
             _badge.alpha = 0.0f;
         } completion:^(BOOL finished) {
             [_badge removeFromSuperview];
-            [_badge release];
+            arc_release(badge);
             _badge = nil;
             self.clipsToBounds = _oldClipsToBounds;
         }];
