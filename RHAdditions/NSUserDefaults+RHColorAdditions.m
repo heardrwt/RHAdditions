@@ -32,12 +32,12 @@
 @implementation NSUserDefaults (RHColorAdditions)
 
 -(void)setColor:(id)color forKey:(NSString*)key{
-    [self setObject:[NSArchiver archivedDataWithRootObject:color] forKey:key];
+    [self setObject:[NSKeyedArchiver archivedDataWithRootObject:color] forKey:key];
 }
 
 -(id)colorForKey:(NSString*)key{
     NSData *data = [self dataForKey:key];
-    return data ? [NSUnarchiver unarchiveObjectWithData:data] : nil;
+    return data ? [NSKeyedUnarchiver unarchiveObjectWithData:data] : nil;
 }
 
 @end
