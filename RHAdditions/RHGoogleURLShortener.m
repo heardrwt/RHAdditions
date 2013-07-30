@@ -36,6 +36,7 @@
 #import "RHARCSupport.h"
 #import "NSJSONSerialization+RHTypeAdditions.h"
 
+static NSString * _apiKey = NULL;
 
 @interface RHGoogleURLShortener () <NSURLConnectionDataDelegate>
 -(void)_cleanup;
@@ -44,6 +45,12 @@
 @end
 
 @implementation RHGoogleURLShortener
+
++(void)setGoogleURLShortenerAPIKey:(NSString*)key{
+    arc_release(_apiKey);
+    _apiKey = [key copy];
+}
+
 
 +(id)shortenURL:(NSURL*)url withCompletion:(RHGoogleURLShortenerCompletionBlock)completion{
     return arc_autorelease([[[self class] alloc] initWithLongURL:url withCompletion:completion]);
@@ -57,10 +64,10 @@
 
     self = [super init];
     if (self) {
-#ifndef RH_GOOGLE_URL_SHORTENER_API_KEY
-        [NSException raise:NSInternalInconsistencyException format:@"Error: RH_GOOGLE_URL_SHORTENER_API_KEY must be defined in-order to use the RHGoogleURLShortener Class."];
-#endif
-    
+        if (!_apiKey){
+            [NSException raise:NSInternalInconsistencyException format:@"Error: setGoogleURLShortenerAPIKey: must be called with your google service API key in-order to use the RHGoogleURLShortener Class."];
+        }
+
         _originalURL = arc_retain(url);
         _completionBlock = [completion copy];
         
@@ -105,7 +112,7 @@
 }
 
 +(NSURLRequest*)_requestWithLongURL:(NSURL*)longURL{
-    NSURL *apiURL = [NSURL URLWithString:[NSString stringWithFormat:kGoogleURLShortenerURLEndpoint, RH_GOOGLE_URL_SHORTENER_API_KEY]];
+    NSURL *apiURL = [NSURL URLWithString:[NSString stringWithFormat:kGoogleURLShortenerURLEndpoint, _apiKey]];
     NSMutableURLRequest *result = [[NSMutableURLRequest alloc] initWithURL:apiURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:kRequestTimeout];
     [result setHTTPMethod:@"POST"];
     NSData *body = [[NSDictionary dictionaryWithObject:[longURL description] forKey:@"longUrl"] JSONData];

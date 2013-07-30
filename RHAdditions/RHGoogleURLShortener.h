@@ -29,8 +29,8 @@
 
 #import <Foundation/Foundation.h>
 
-//you must define your google service API key to use this class eg:
-//#define RH_GOOGLE_URL_SHORTENER_API_KEY @"YOUR_API_KEY_HERE"
+//you must provide your google service API key to use this class eg:
+//[RHGoogleURLShortener setGoogleURLShortenerAPIKey:@"123xyz"];
 
 typedef void (^RHGoogleURLShortenerCompletionBlock)(NSURL *shortURL, NSError *error);
 //if shortening fails, we return nil and set error!
@@ -43,6 +43,8 @@ typedef void (^RHGoogleURLShortenerCompletionBlock)(NSURL *shortURL, NSError *er
     NSURLConnection *_connection;
     id _retainedSelf;
 }
+
++(void)setGoogleURLShortenerAPIKey:(NSString*)key;
 
 +(id)shortenURL:(NSURL*)url withCompletion:(RHGoogleURLShortenerCompletionBlock)completion;
 -(void)cancel;
