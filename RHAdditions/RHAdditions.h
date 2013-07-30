@@ -47,6 +47,7 @@
 #import "NSDictionary+RHNumberAdditions.h"
 #import "NSJSONSerialization+RHTypeAdditions.h"
 #import "NSObject+RHClassInfoAdditions.h"
+#import "NSString+RHCaseAdditions.h"
 #import "NSString+RHNumberAdditions.h"
 #import "NSString+RHRot13Additions.h"
 #import "NSString+RHURLEncodingAdditions.h"
