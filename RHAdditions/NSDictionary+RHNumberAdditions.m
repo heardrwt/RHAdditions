@@ -51,7 +51,8 @@
 -(void)setBool:(BOOL)value forKey:(id <NSCopying>)aKey                           { [self setObject:[NSNumber numberWithBool:value] forKey:aKey];             }
 -(void)setInt:(int)value forKey:(id <NSCopying>)aKey                             { [self setObject:[NSNumber numberWithInt:value] forKey:aKey];              }
 -(void)setLong:(long int)value forKey:(id <NSCopying>)aKey                       { [self setObject:[NSNumber numberWithLong:value] forKey:aKey];             }
--(void)setLongLong:(long long)value forKey:(id <NSCopying>)aKey                  { [self setObject:[NSNumber numberWithUnsignedLong:value] forKey:aKey];     }
+-(void)setUnsignedLong:(unsigned long)value forKey:(id <NSCopying>)aKey          { [self setObject:[NSNumber numberWithUnsignedLong:value] forKey:aKey];     }
+-(void)setLongLong:(long long)value forKey:(id <NSCopying>)aKey                  { [self setObject:[NSNumber numberWithLongLong:value] forKey:aKey];     }
 -(void)setUnsignedLongLong:(unsigned long long)value forKey:(id <NSCopying>)aKey { [self setObject:[NSNumber numberWithUnsignedLongLong:value] forKey:aKey]; }
 -(void)setDouble:(double)value forKey:(id <NSCopying>)aKey                       { [self setObject:[NSNumber numberWithDouble:value] forKey:aKey];           }
 -(void)setFloat:(float)value forKey:(id <NSCopying>)aKey                         { [self setObject:[NSNumber numberWithFloat:value] forKey:aKey];            }
