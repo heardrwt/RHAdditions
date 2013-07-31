@@ -35,6 +35,10 @@
     BOOL _RHLoggingEnabled = NO;
 #endif
 
+
+#ifndef _RH_LOGGING_INIT
+#define _RH_LOGGING_INIT 1
+
 void _RHLoggingInit(){
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -44,4 +48,6 @@ void _RHLoggingInit(){
         if (_RHLoggingEnabled) NSLog(@"RHLogging enabled.");
     });
 }
+
+#endif
 
