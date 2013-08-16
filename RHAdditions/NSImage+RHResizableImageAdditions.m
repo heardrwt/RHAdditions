@@ -161,8 +161,8 @@ RHEdgeInsets RHEdgeInsetsFromString(NSString* string){
         arc_release_nil(_cachedImageRep);
         _cachedImageSize = NSZeroSize;
         _cachedImageDeviceScale = 0.0f;
+        _cachedImageRep = nil;
     }
-    
     
     //if we don't have a cached image rep, create one now
     if (!_cachedImageRep){
