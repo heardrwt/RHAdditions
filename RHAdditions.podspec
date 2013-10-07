@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.ios.source_files = 'RHAdditions/{RHAdditions,RHARCSupport,RHLoggingSupport,NSArray,NSDate,NSDictionary,NSJSONSerialization,NSObject,NSString,NSThread,NSUserDefaults,RHWeakSelectorForwarder,RHGoogleURLShortener,RHWeakValue,UI}*.{h,m}'
   s.ios.frameworks   = 'UIKit'
   s.ios.deployment_target = '5.0'
-  s.osx.source_files = 'RHAdditions/{RHAdditions,RHARCSupport,RHLoggingSupport,NSArray,NSDate,NSDictionary,NSJSONSerialization,NSObject,NSString,NSThread,NSUserDefaults,RHWeakSelectorForwarder,RHGoogleURLShortener,RHWeakValue,NSBundle,NSImage,NSImageView,NSTextField,NSView,NSWindow,RHGetBSDProcessList}*.{h,m}'
+  s.osx.source_files = 'RHAdditions/{RHAdditions,RHARCSupport,RHLoggingSupport,NSArray,NSDate,NSDictionary,NSJSONSerialization,NSObject,NSString,NSThread,NSUserDefaults,RHWeakSelectorForwarder,RHGoogleURLShortener,RHWeakValue,NSBundle,NSImage,NSImageView,NSTextField,NSView,NSWindow,RHGetBSDProcessList,RHDraggableImageView}*.{h,m}'
   s.osx.frameworks   = 'Foundation', 'Cocoa', 'Carbon', 'ServiceManagement'
   s.osx.deployment_target = '10.7'
   s.license      = {

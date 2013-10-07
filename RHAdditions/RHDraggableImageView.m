@@ -220,7 +220,7 @@ static const CGFloat RHDraggableImageViewMinimumDragInitiationDistance = 40.0f;
         NSError *error = nil;
         NSURL *destination = [dropDestination  URLByAppendingPathComponent:self.representedFilename isDirectory:NO];
         if (![[NSFileManager defaultManager] copyItemAtURL:_representedURL toURL:destination error:&error]){
-            RHErrorLog(@"Error: Drag failed to copy file from:%@ to %@ with error: %@", _representedURL, destination, error);
+            NSLog(@"Error: Drag failed to copy file from:%@ to %@ with error: %@", _representedURL, destination, error);
         }
     } else {
         [[self.image PNGRepresentation] writeToFile:[[dropDestination path] stringByAppendingPathComponent:self.representedFilename]  atomically:YES];
