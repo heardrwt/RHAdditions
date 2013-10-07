@@ -77,6 +77,7 @@
 #import "NSImage+RHImageRepresentationAdditions.h"
 #import "NSImage+RHResizableImageAdditions.h"
 #import "NSImageView+RHImageLoadingAdditions.h"
+#import "NSImageView+RHImageRectAdditions.h"
 #import "NSTextField+RHLabelAdditions.h"
 #import "NSTextField+RHSizeAdditions.h"
 #import "NSView+RHSnapshotAdditions.h"
