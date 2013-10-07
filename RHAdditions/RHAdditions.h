@@ -84,6 +84,7 @@
 #import "NSWindow+RHPreventCaptureAdditions.h"
 #import "NSWindow+RHResizeAdditions.h"
 #import "RHGetBSDProcessList.h"
+#import "RHDraggableImageView.h"
 
 #endif
 

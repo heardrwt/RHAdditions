@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "RHAdditions"
-  s.version      = "1.1.0"
+  s.version      = "1.2.0"
   s.homepage     = "https://github.com/heardrwt/RHAdditions"
   s.summary      = "Various Objective-C categories and additions that have served me well over the years. Hopefully then can serve you too!"
   s.author       = 'Richard Heard'
