@@ -73,6 +73,7 @@
 
 #else
 //mac only
+#import "NSAlert+RHBlockAdditions.h"
 #import "NSBundle+RHLaunchAtLoginAdditions.h"
 #import "NSImage+RHImageRepresentationAdditions.h"
 #import "NSImage+RHResizableImageAdditions.h"
