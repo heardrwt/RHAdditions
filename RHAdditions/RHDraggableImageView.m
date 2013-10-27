@@ -128,6 +128,10 @@ static const CGFloat RHDraggableImageViewMinimumDragInitiationDistance = 40.0f;
             [dragPasteboard writeObjects:@[pasteboardItem]];
             [dragPasteboard setPropertyList:[NSArray arrayWithObject:NSPasteboardTypePNG] forType:NSFilesPromisePboardType];
             
+            //if we have a file url, set that also
+            if (_representedURL){                
+                [dragPasteboard setString:[_representedURL absoluteString] forType:(NSString*)kUTTypeFileURL];
+            }
             
             //call through to the dragImage: method. ( we dont bother passing some args as we have overridden the method and dont use them)
             [self dragImage:nil at:NSZeroPoint offset:NSZeroSize event:_mouseDownEvent pasteboard:dragPasteboard source:self slideBack:YES];
