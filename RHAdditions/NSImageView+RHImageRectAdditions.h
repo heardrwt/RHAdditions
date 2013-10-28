@@ -1,6 +1,5 @@
 //
 //  NSImageView+RHImageRectAdditions.h
-//  Screenie
 //
 //  Created by Richard Heard on 6/10/2013.
 //  Copyright (c) 2013 Richard Heard. All rights reserved.
@@ -32,9 +31,9 @@
 
 @interface NSImageView (RHImageRectAdditions)
 
--(NSSize)imageScale;    //takes into account NSImageScale
--(NSSize)scaledImageSize;     //takes into account NSImageScale
--(NSRect)imageRect;     //takes into account NSImageAlignment & NSImageScale
+-(NSSize)imageScale;        //takes into account NSImageScale
+-(NSSize)scaledImageSize;   //takes into account NSImageScale
+-(NSRect)imageRect;         //takes into account NSImageAlignment & NSImageScale
 
 @end
 

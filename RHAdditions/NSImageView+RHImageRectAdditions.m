@@ -1,6 +1,5 @@
 //
 //  NSImageView+RHImageRectAdditions.m
-//  Screenie
 //
 //  Created by Richard Heard on 6/10/2013.
 //  Copyright (c) 2013 Richard Heard. All rights reserved.
