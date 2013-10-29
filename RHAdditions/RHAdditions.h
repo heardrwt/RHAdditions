@@ -55,8 +55,9 @@
 #import "NSUserDefaults+RHColorAdditions.h"
 
 //objects
-#import "RHWeakSelectorForwarder.h"
 #import "RHGoogleURLShortener.h"
+#import "RHProgressiveURLConnection.h"
+#import "RHWeakSelectorForwarder.h"
 #import "RHWeakValue.h"
 
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
