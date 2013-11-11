@@ -56,6 +56,7 @@
 
 //objects
 #import "RHGoogleURLShortener.h"
+#import "RHMushParser.h"
 #import "RHProgressiveURLConnection.h"
 #import "RHWeakSelectorForwarder.h"
 #import "RHWeakValue.h"
