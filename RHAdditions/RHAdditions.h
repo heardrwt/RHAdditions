@@ -43,6 +43,7 @@
 
 #import "NSArray+RHFirstObjectAdditions.h"
 #import "NSArray+RHNumberAdditions.h"
+#import "NSArray+RHObjectAdditions.h"
 #import "NSDate+RHCalendarAdditions.h"
 #import "NSDictionary+RHNumberAdditions.h"
 #import "NSJSONSerialization+RHTypeAdditions.h"
