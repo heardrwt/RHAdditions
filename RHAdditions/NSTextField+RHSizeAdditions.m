@@ -80,6 +80,17 @@ NSSize RHAttributedStringRequiredSizeWithMaxSize(NSAttributedString* attributedS
     return result;
 }
 
+//other
+NSAttributedString* RHAttributedStringWithAlignment(NSAttributedString *string, NSTextAlignment alignment) {
+    NSMutableParagraphStyle *paragraphStyle = arc_autorelease([[NSMutableParagraphStyle alloc] init]);
+    [paragraphStyle setAlignment:alignment];
+    
+    NSMutableAttributedString *mutableString = arc_autorelease([[NSMutableAttributedString alloc] initWithAttributedString:string]);
+    [mutableString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [string length])];
+    
+    return arc_autorelease([[NSAttributedString alloc] initWithAttributedString:mutableString]);
+}
+
 //include an implementation in this file so we don't have to use -load_all for this category to be included in a static lib
 @interface RHFixCategoryBugClassNSTFRHSA : NSObject @end @implementation RHFixCategoryBugClassNSTFRHSA @end
 

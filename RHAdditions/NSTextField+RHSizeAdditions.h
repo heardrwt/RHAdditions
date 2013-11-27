@@ -41,3 +41,6 @@
 
 extern NSSize RHAttributedStringRequiredSizeWithMaxSize(NSAttributedString* attributedString, NSSize maxSize);
 
+//other
+extern NSAttributedString* RHAttributedStringWithAlignment(NSAttributedString *string, NSTextAlignment alignment);
+
