@@ -39,9 +39,9 @@
 
 @end
 
-extern NSData* RHImagePNGRepresentationForImage(NSImage* image);
-extern NSData* RHImageJPEGRepresentationForImage(NSImage* image, float compressionFactor);
-extern NSData* RHImageGIFRepresentationForImage(NSImage* image);
+extern NSData* RHImagePNGRepresentationForImage(NSImage *image);
+extern NSData* RHImageJPEGRepresentationForImage(NSImage *image, float compressionFactor);
+extern NSData* RHImageGIFRepresentationForImage(NSImage *image);
 
-extern NSData* RHImageBestRepresentationForImage(NSImage* image);
+extern NSData* RHImageBestRepresentationForImage(NSImage *image);
 

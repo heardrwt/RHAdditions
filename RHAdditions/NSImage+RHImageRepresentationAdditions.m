@@ -51,8 +51,7 @@
 
 
 
-NSData* RHImagePNGRepresentationForImage(NSImage* image){
-
+NSData* RHImagePNGRepresentationForImage(NSImage *image){
     //bail if its a crazy size.
     if (image.size.width > 5000 || image.size.height > 5000) return nil;
 
@@ -67,12 +66,12 @@ NSData* RHImagePNGRepresentationForImage(NSImage* image){
         
         [image unlockFocus];
     }
-    
+
     return [imageRep representationUsingType:NSPNGFileType properties:nil];
 }
 
 
-NSData* RHImageJPEGRepresentationForImage(NSImage* image, float compressionFactor){
+NSData* RHImageJPEGRepresentationForImage(NSImage *image, float compressionFactor){
     
     
     //check to make sure we have a bitmap image rep
@@ -93,7 +92,7 @@ NSData* RHImageJPEGRepresentationForImage(NSImage* image, float compressionFacto
     
 }
 
-NSData* RHImageGIFRepresentationForImage(NSImage* image){
+NSData* RHImageGIFRepresentationForImage(NSImage *image){
     
     //check to make sure we have a bitmap image rep
     NSBitmapImageRep *imageRep = [[image representations] lastObject];
@@ -169,7 +168,7 @@ NSData* RHImageGIFRepresentationForImage(NSImage* image){
 }
 
 
-NSData* RHImageBestRepresentationForImage(NSImage* image){
+NSData* RHImageBestRepresentationForImage(NSImage *image){
         
     //if we have a GIF frame count, save as a GIF, otherwise save as PNG
     NSBitmapImageRep *imageRep = [[image representations] lastObject];
