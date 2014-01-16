@@ -31,6 +31,8 @@
 
 @interface NSDictionary (RHNumberAdditions)
 
+-(NSNumber *)numberForKey:(id)aKey;
+
 //primitive getters
 -(BOOL)boolForKey:(id)aKey;
 -(int)intForKey:(id)aKey;
@@ -50,12 +52,36 @@
 //primitive insertions
 -(void)setBool:(BOOL)value forKey:(id <NSCopying>)aKey;
 -(void)setInt:(int)value forKey:(id <NSCopying>)aKey;
--(void)setLong:(long int)value forKey:(id <NSCopying>)aKey;
+-(void)setLong:(long)value forKey:(id <NSCopying>)aKey;
 -(void)setLongLong:(long long)value forKey:(id <NSCopying>)aKey;
 -(void)setUnsignedLongLong:(unsigned long long)value forKey:(id <NSCopying>)aKey;
 -(void)setDouble:(double)value forKey:(id <NSCopying>)aKey;
 -(void)setFloat:(float)value forKey:(id <NSCopying>)aKey;
 -(void)setInteger:(NSInteger)value forKey:(id <NSCopying>)aKey;
 -(void)setUnsignedInteger:(NSUInteger)value forKey:(id <NSCopying>)aKey;
+
+@end
+
+
+@interface NSUserDefaults (RHNumberAdditions)
+
+-(NSNumber *)numberForKey:(NSString *)aKey;
+
+-(int)intForKey:(NSString *)aKey;
+-(long)longForKey:(NSString *)aKey;
+-(unsigned long)unsignedLongForKey:(NSString *)aKey;
+-(long long)longLongForKey:(NSString *)aKey;
+-(unsigned long long)unsignedLongLongForKey:(NSString *)aKey;
+-(NSUInteger)usignedIntegerForKey:(NSString *)aKey;
+
+-(void)setInt:(int)value forKey:(NSString *)aKey;
+-(void)setLong:(long)value forKey:(NSString *)aKey;
+-(void)setLongLong:(long long)value forKey:(NSString *)aKey;
+-(void)setUnsignedLongLong:(unsigned long long)value forKey:(NSString *)aKey;
+-(void)setUnsignedInteger:(NSUInteger)value forKey:(NSString *)aKey;
+
+-(void)incrementKey:(NSString *)aKey;
+-(void)decrementKey:(NSString *)aKey;
+-(void)incrementKey:(NSString *)aKey byAmount:(NSInteger)amount;
 
 @end

@@ -31,17 +31,23 @@
 
 @implementation NSArray (RHNumberAdditions)
 
+-(NSNumber *)numberAtIndex:(NSUInteger)index {
+    id object = [self objectAtIndex:index];
+    if ([object isKindOfClass:[NSNumber class]]) return object;
+    return nil;
+}
+
 //primitive additions
--(BOOL)boolAtIndex:(NSUInteger)index                           { return [[self objectAtIndex:index] boolValue];             }
--(int)intAtIndex:(NSUInteger)index                             { return [[self objectAtIndex:index] intValue];              }
--(long)longAtIndex:(NSUInteger)index                           { return [[self objectAtIndex:index] longValue];             }
--(unsigned long)unsignedLongAtIndex:(NSUInteger)index          { return [[self objectAtIndex:index] longValue];             }
--(long long)longLongAtIndex:(NSUInteger)index                  { return [[self objectAtIndex:index] longLongValue];         }
--(unsigned long long)unsignedLongLongAtIndex:(NSUInteger)index { return [[self objectAtIndex:index] unsignedLongLongValue]; }
--(double)doubleAtIndex:(NSUInteger)index                       { return [[self objectAtIndex:index] doubleValue];           }
--(float)floatAtIndex:(NSUInteger)index                         { return [[self objectAtIndex:index] floatValue];            }
--(NSInteger)integerAtIndex:(NSUInteger)index                   { return [[self objectAtIndex:index] integerValue];          }
--(NSUInteger)usignedIntegerAtIndex:(NSUInteger)index           { return [[self objectAtIndex:index] unsignedIntegerValue];  }
+-(BOOL)boolAtIndex:(NSUInteger)index                           { return [[self numberAtIndex:index] boolValue];             }
+-(int)intAtIndex:(NSUInteger)index                             { return [[self numberAtIndex:index] intValue];              }
+-(long)longAtIndex:(NSUInteger)index                           { return [[self numberAtIndex:index] longValue];             }
+-(unsigned long)unsignedLongAtIndex:(NSUInteger)index          { return [[self numberAtIndex:index] unsignedLongValue];     }
+-(long long)longLongAtIndex:(NSUInteger)index                  { return [[self numberAtIndex:index] longLongValue];         }
+-(unsigned long long)unsignedLongLongAtIndex:(NSUInteger)index { return [[self numberAtIndex:index] unsignedLongLongValue]; }
+-(double)doubleAtIndex:(NSUInteger)index                       { return [[self numberAtIndex:index] doubleValue];           }
+-(float)floatAtIndex:(NSUInteger)index                         { return [[self numberAtIndex:index] floatValue];            }
+-(NSInteger)integerAtIndex:(NSUInteger)index                   { return [[self numberAtIndex:index] integerValue];          }
+-(NSUInteger)usignedIntegerAtIndex:(NSUInteger)index           { return [[self numberAtIndex:index] unsignedIntegerValue];  }
 
 @end
 

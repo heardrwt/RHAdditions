@@ -31,6 +31,8 @@
 
 @interface NSArray (RHNumberAdditions)
 
+-(NSNumber *)numberAtIndex:(NSUInteger)index; // NSNumber or nil
+
 //primitive getters
 -(BOOL)boolAtIndex:(NSUInteger)index;
 -(int)intAtIndex:(NSUInteger)index;
@@ -50,7 +52,7 @@
 //primitive additions
 -(void)addBool:(BOOL)value;
 -(void)addInt:(int)value;
--(void)addLong:(long int)value;
+-(void)addLong:(long)value;
 -(void)addUnsignedLong:(unsigned long)value;
 -(void)addLongLong:(long long)value;
 -(void)addUnsignedLongLong:(unsigned long long)value;
@@ -62,7 +64,7 @@
 //primitive insertions
 -(void)insertBool:(BOOL)value atIndex:(NSUInteger)index;
 -(void)insertInt:(int)value atIndex:(NSUInteger)index;
--(void)insertLong:(long int)value atIndex:(NSUInteger)index;
+-(void)insertLong:(long)value atIndex:(NSUInteger)index;
 -(void)insertLongLong:(long long)value atIndex:(NSUInteger)index;
 -(void)insertUnsignedLongLong:(unsigned long long)value atIndex:(NSUInteger)index;
 -(void)insertDouble:(double)value atIndex:(NSUInteger)index;

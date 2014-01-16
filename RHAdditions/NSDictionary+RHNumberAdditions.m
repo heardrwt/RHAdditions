@@ -31,17 +31,23 @@
 
 @implementation NSDictionary (RHNumberAdditions)
 
+-(NSNumber *)numberForKey:(id)aKey {
+    id object = [self objectForKey:aKey];
+    if ([object isKindOfClass:[NSNumber class]]) return object;
+    return nil;
+}
+
 //primitive getters
--(BOOL)boolForKey:(id)aKey                           { return [[self objectForKey:aKey] boolValue];             }
--(int)intForKey:(id)aKey                             { return [[self objectForKey:aKey] intValue];              }
--(long)longForKey:(id)aKey                           { return [[self objectForKey:aKey] longValue];             }
--(unsigned long)unsignedLongForKey:(id)aKey          { return [[self objectForKey:aKey] unsignedLongValue];     }
--(long long)longLongForKey:(id)aKey                  { return [[self objectForKey:aKey] longLongValue];         }
--(unsigned long long)unsignedLongLongForKey:(id)aKey { return [[self objectForKey:aKey] unsignedLongLongValue]; }
--(double)doubleForKey:(id)aKey                       { return [[self objectForKey:aKey] doubleValue];           }
--(float)floatForKey:(id)aKey                         { return [[self objectForKey:aKey] floatValue];            }
--(NSInteger)integerForKey:(id)aKey                   { return [[self objectForKey:aKey] integerValue];          }
--(NSUInteger)usignedIntegerForKey:(id)aKey           { return [[self objectForKey:aKey] unsignedIntegerValue];  }
+-(BOOL)boolForKey:(id)aKey                           { return [[self numberForKey:aKey] boolValue];             }
+-(int)intForKey:(id)aKey                             { return [[self numberForKey:aKey] intValue];              }
+-(long)longForKey:(id)aKey                           { return [[self numberForKey:aKey] longValue];             }
+-(unsigned long)unsignedLongForKey:(id)aKey          { return [[self numberForKey:aKey] unsignedLongValue];     }
+-(long long)longLongForKey:(id)aKey                  { return [[self numberForKey:aKey] longLongValue];         }
+-(unsigned long long)unsignedLongLongForKey:(id)aKey { return [[self numberForKey:aKey] unsignedLongLongValue]; }
+-(double)doubleForKey:(id)aKey                       { return [[self numberForKey:aKey] doubleValue];           }
+-(float)floatForKey:(id)aKey                         { return [[self numberForKey:aKey] floatValue];            }
+-(NSInteger)integerForKey:(id)aKey                   { return [[self numberForKey:aKey] integerValue];          }
+-(NSUInteger)usignedIntegerForKey:(id)aKey           { return [[self numberForKey:aKey] unsignedIntegerValue];  }
 
 @end
 
@@ -50,14 +56,42 @@
 //primitive insertions
 -(void)setBool:(BOOL)value forKey:(id <NSCopying>)aKey                           { [self setObject:[NSNumber numberWithBool:value] forKey:aKey];             }
 -(void)setInt:(int)value forKey:(id <NSCopying>)aKey                             { [self setObject:[NSNumber numberWithInt:value] forKey:aKey];              }
--(void)setLong:(long int)value forKey:(id <NSCopying>)aKey                       { [self setObject:[NSNumber numberWithLong:value] forKey:aKey];             }
+-(void)setLong:(long)value forKey:(id <NSCopying>)aKey                           { [self setObject:[NSNumber numberWithLong:value] forKey:aKey];             }
 -(void)setUnsignedLong:(unsigned long)value forKey:(id <NSCopying>)aKey          { [self setObject:[NSNumber numberWithUnsignedLong:value] forKey:aKey];     }
--(void)setLongLong:(long long)value forKey:(id <NSCopying>)aKey                  { [self setObject:[NSNumber numberWithLongLong:value] forKey:aKey];     }
+-(void)setLongLong:(long long)value forKey:(id <NSCopying>)aKey                  { [self setObject:[NSNumber numberWithLongLong:value] forKey:aKey];         }
 -(void)setUnsignedLongLong:(unsigned long long)value forKey:(id <NSCopying>)aKey { [self setObject:[NSNumber numberWithUnsignedLongLong:value] forKey:aKey]; }
 -(void)setDouble:(double)value forKey:(id <NSCopying>)aKey                       { [self setObject:[NSNumber numberWithDouble:value] forKey:aKey];           }
 -(void)setFloat:(float)value forKey:(id <NSCopying>)aKey                         { [self setObject:[NSNumber numberWithFloat:value] forKey:aKey];            }
 -(void)setInteger:(NSInteger)value forKey:(id <NSCopying>)aKey                   { [self setObject:[NSNumber numberWithInteger:value] forKey:aKey];          }
 -(void)setUnsignedInteger:(NSUInteger)value forKey:(id <NSCopying>)aKey          { [self setObject:[NSNumber numberWithUnsignedInteger:value] forKey:aKey];  }
+
+@end
+
+@implementation NSUserDefaults (RHNumberAdditions)
+
+-(NSNumber *)numberForKey:(NSString *)aKey {
+    id object = [self objectForKey:aKey];
+    if ([object isKindOfClass:[NSNumber class]]) return object;
+    return nil;
+}
+
+-(int)intForKey:(NSString *)aKey                             { return [[self numberForKey:aKey] intValue];              }
+-(long)longForKey:(NSString *)aKey;                          { return [[self numberForKey:aKey] longValue];             }
+-(unsigned long)unsignedLongForKey:(NSString *)aKey          { return [[self numberForKey:aKey] unsignedLongValue];     }
+-(long long)longLongForKey:(NSString *)aKey                  { return [[self numberForKey:aKey] longLongValue];         }
+-(unsigned long long)unsignedLongLongForKey:(NSString *)aKey { return [[self numberForKey:aKey] unsignedLongLongValue]; }
+-(NSUInteger)usignedIntegerForKey:(NSString *)aKey           { return [[self numberForKey:aKey] unsignedIntegerValue];  }
+
+-(void)setInt:(int)value forKey:(NSString *)aKey                             { [self setObject:[NSNumber numberWithInt:value] forKey:aKey];              }
+-(void)setLong:(long)value forKey:(NSString *)aKey                           { [self setObject:[NSNumber numberWithLong:value] forKey:aKey];             }
+-(void)setLongLong:(long long)value forKey:(NSString *)aKey                  { [self setObject:[NSNumber numberWithLongLong:value] forKey:aKey];         }
+-(void)setUnsignedLongLong:(unsigned long long)value forKey:(NSString *)aKey { [self setObject:[NSNumber numberWithUnsignedLongLong:value] forKey:aKey]; }
+-(void)setUnsignedInteger:(NSUInteger)value forKey:(NSString *)aKey          { [self setObject:[NSNumber numberWithUnsignedInteger:value] forKey:aKey];  }
+
+-(void)incrementKey:(NSString *)aKey { [self incrementKey:aKey byAmount:1];  }
+-(void)decrementKey:(NSString *)aKey { [self incrementKey:aKey byAmount:-1]; }
+
+-(void)incrementKey:(NSString *)aKey byAmount:(NSInteger)amount { [self setInteger:([self integerForKey:aKey] + amount) forKey:aKey]; }
 
 @end
 
