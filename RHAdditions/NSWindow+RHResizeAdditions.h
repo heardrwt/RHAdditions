@@ -28,6 +28,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <QuartzCore/CAMediaTimingFunction.h>
 
 @interface NSWindow (RHResizeAdditions)
 

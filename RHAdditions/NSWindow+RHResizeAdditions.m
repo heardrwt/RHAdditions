@@ -39,11 +39,35 @@
     NSRect frame = [window contentRectForFrameRect:[window frame]];
     
     CGFloat newX = NSMinX(frame) + (0.5* (NSWidth(frame) - size.width));
-    NSRect newFrame = [window frameRectForContentRect:NSMakeRect(newX, NSMaxY(frame) - size.height, size.width, size.height)];
     
+    NSRect newFrame = [window frameRectForContentRect:NSMakeRect(newX, NSMaxY(frame) - size.height, size.width, size.height)];
+
+    //keep the view fully on screen
+    NSRect screenFrame = self.screen.frame;
+    if (newFrame.origin.x < screenFrame.origin.x + 1.0) {
+        newFrame.origin.x = screenFrame.origin.x + 1.0;
+    }
+    if (NSMaxX(newFrame) > NSMaxX(screenFrame) - 1.0) {
+        newFrame.origin.x = NSMaxX(screenFrame) - NSWidth(newFrame) - 1.0;
+    }
+    
+    //keep it pinned to the edge of the screen, if currently pinned to the edge
+    if (NSMinX(self.frame) <= NSMinX(screenFrame) + 2.0){
+        //left edge of the screen
+        newFrame.origin.x = NSMinX(screenFrame) + 1.0;
+    }
+
+    if (NSMaxX(self.frame) >= NSMaxX(screenFrame) - 2.0){
+        //left edge of the screen
+        newFrame.origin.x = NSMaxX(screenFrame) - NSWidth(newFrame) - 1.0;
+    }
+
+    //resize
     if (duration > 0.0f){
         [NSAnimationContext beginGrouping];
         [[NSAnimationContext currentContext] setDuration:duration];
+        [[NSAnimationContext currentContext] setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+
         [[window animator] setFrame:newFrame display:YES];
         [NSAnimationContext endGrouping];
     } else {
