@@ -61,7 +61,7 @@ NSString * const RHProgressiveURLConnectionDidFinishNotification = @"RHProgressi
 @synthesize percentageProgress=_percentageProgress;
 
 #pragma mark - init
--(id)initWithRequest:(NSURLRequest *)request delegate:(id<NSURLConnectionDownloadDelegate, NSURLConnectionDataDelegate>)delegate startImmediately:(BOOL)startImmediately{
+-(id)initWithRequest:(NSURLRequest *)request delegate:(id /* <NSURLConnectionDownloadDelegate, NSURLConnectionDataDelegate> */)delegate startImmediately:(BOOL)startImmediately{
     self = [super init];
     if (self) {
         self.delegate = delegate;
@@ -93,7 +93,7 @@ NSString * const RHProgressiveURLConnectionDidFinishNotification = @"RHProgressi
     return [self initWithRequest:request delegate:nil];
 }
 
--(id)initWithRequest:(NSURLRequest *)request delegate:(id<NSURLConnectionDownloadDelegate, NSURLConnectionDataDelegate>)delegate{
+-(id)initWithRequest:(NSURLRequest *)request delegate:(id /* <NSURLConnectionDownloadDelegate, NSURLConnectionDataDelegate> */)delegate{
     return [self initWithRequest:request delegate:delegate startImmediately:YES];
 }
 
@@ -317,7 +317,7 @@ NSString * const RHProgressiveURLConnectionDidFinishNotification = @"RHProgressi
 #pragma mark - internal
 -(void)_progressUpdated{
     [_delegateQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
-        if (_progressBlock) _progressBlock(self, self.percentageProgress);
+        if (_progressBlock) _progressBlock(self, _percentageProgress);
         [[NSNotificationCenter defaultCenter] postNotificationName:RHProgressiveURLConnectionDidUpdateProgressNotification object:self];
     }]];
 }

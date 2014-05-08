@@ -49,9 +49,12 @@
     return _weakValue;
 }
 
--(BOOL)isEqual:(RHWeakValue*)object {
-    if (![object isKindOfClass:[RHWeakValue class]]) return NO;
-    return object.weakValue == self.weakValue;
+-(BOOL)isEqual:(id)object {
+    if ([object isKindOfClass:[RHWeakValue class]]){
+        return [[object weakValue] isEqual:self.weakValue];
+    } else {
+        return [super isEqual:object];
+    }
 }
 
 -(NSString*)description{

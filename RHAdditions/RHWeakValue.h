@@ -37,7 +37,7 @@
 
 -(id)initWithObject:(id)object;
 
-@property (weak, readonly) id weakValue;
+@property (nonatomic, weak, readonly) id weakValue;
 
 @end
 

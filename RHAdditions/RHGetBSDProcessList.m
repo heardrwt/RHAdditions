@@ -38,7 +38,7 @@
 #include <pwd.h>
 
 
-extern NSArray* RHGetBSDProcessList(){
+NSArray* RHGetBSDProcessList(void){
     
     struct kinfo_proc *processList = NULL;
     size_t numberOfProcesses = 0;
@@ -50,7 +50,7 @@ extern NSArray* RHGetBSDProcessList(){
     
     NSMutableArray *processes = [NSMutableArray arrayWithCapacity:(int)numberOfProcesses];
     
-    for (int i = 0; i < numberOfProcesses; i++) {
+    for (int i = 0; i < (int)numberOfProcesses; i++) {
         struct kinfo_proc *currentProcess = &processList[i];
         struct passwd *user = getpwuid(currentProcess->kp_eproc.e_ucred.cr_uid);
         NSMutableDictionary *entry = [NSMutableDictionary dictionaryWithCapacity:4];

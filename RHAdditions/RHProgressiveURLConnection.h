@@ -67,7 +67,7 @@ typedef void (^RHProgressiveURLConnectionCompletionBlock)(NSURLResponse *respons
 @property (nonatomic, readonly) double percentageProgress; //KVO observable
 
 //designated initializer
--(id)initWithRequest:(NSURLRequest *)request delegate:(id)delegate startImmediately:(BOOL)startImmediately; //(delegate has all methods passed through to it from the internal NSURLConnection, if implemented)
+-(id)initWithRequest:(NSURLRequest *)request delegate:(id /* <NSURLConnectionDownloadDelegate, NSURLConnectionDataDelegate> */)delegate startImmediately:(BOOL)startImmediately; //(delegate has all methods passed through to it from the internal NSURLConnection, if implemented)
 
 //init helpers
 -(id)initWithRequest:(NSURLRequest *)request;

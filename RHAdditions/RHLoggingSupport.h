@@ -42,7 +42,7 @@
     #define RHLog(format, ...)
 #else
     extern BOOL _RHLoggingEnabled;
-    extern void _RHLoggingInit();
+    extern void _RHLoggingInit(void);
     
     #define RHLog(format, ...) do{ _RHLoggingInit(); if (__builtin_expect(_RHLoggingEnabled, _RHLoggingEnabled)) NSLog( @"%s:%i %@ ", __PRETTY_FUNCTION__, __LINE__, [NSString stringWithFormat: format, ##__VA_ARGS__]); } while(0)
 #endif

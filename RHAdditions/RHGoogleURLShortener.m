@@ -40,7 +40,7 @@ static NSString * _apiKey = NULL;
 
 @interface RHGoogleURLShortener () <NSURLConnectionDataDelegate>
 -(void)_cleanup;
-+(NSURL*)_shortURLFromData:(NSData*)data error:(NSError**)errorOut;
++(NSURL*)_shortURLFromData:(NSData*)data error:(NSError* __autoreleasing *)errorOut;
 +(NSURLRequest*)_requestWithLongURL:(NSURL*)longURL;
 @end
 
@@ -102,7 +102,7 @@ static NSString * _apiKey = NULL;
     arc_release_nil(_retainedSelf);
 }
 
-+(NSURL*)_shortURLFromData:(NSData*)data error:(NSError**)errorOut{
++(NSURL*)_shortURLFromData:(NSData*)data error:(NSError* __autoreleasing *)errorOut{
     if (!data) return nil;
     
     NSDictionary *dictionary = [NSJSONSerialization dictionaryWithData:data error:errorOut];

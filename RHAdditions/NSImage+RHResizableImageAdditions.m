@@ -244,7 +244,7 @@ RHEdgeInsets RHEdgeInsetsFromString(NSString* string){
 }
 
 -(void)originalDrawInRect:(NSRect)rect fromRect:(NSRect)fromRect operation:(NSCompositingOperation)op fraction:(CGFloat)requestedAlpha respectFlipped:(BOOL)respectContextIsFlipped hints:(NSDictionary *)hints{
-    return [super drawInRect:rect fromRect:fromRect operation:op fraction:requestedAlpha respectFlipped:respectContextIsFlipped hints:hints];
+    [super drawInRect:rect fromRect:fromRect operation:op fraction:requestedAlpha respectFlipped:respectContextIsFlipped hints:hints];
 }
 
 @end

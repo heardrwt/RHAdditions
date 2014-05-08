@@ -27,7 +27,7 @@
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-
+#import "RHLoggingSupport.h"
 
 #if (defined(RH_LOGGING_ALWAYS) && RH_LOGGING_ALWAYS)
     BOOL _RHLoggingEnabled = YES;
@@ -39,7 +39,7 @@
 #ifndef _RH_LOGGING_INIT
 #define _RH_LOGGING_INIT 1
 
-void _RHLoggingInit(){
+void _RHLoggingInit(void){
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (!_RHLoggingEnabled){

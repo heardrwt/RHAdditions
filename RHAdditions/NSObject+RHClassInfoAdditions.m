@@ -42,7 +42,7 @@ NSDictionary* RHInfoForClass(Class debugClass){
     
     Ivar* ivars = class_copyIvarList(debugClass, &count);
     NSMutableArray* ivarArray = [NSMutableArray arrayWithCapacity:count];
-    for (int i = 0; i < count ; i++){
+    for (u_int i = 0; i < count ; i++){
         const char* ivarName = ivar_getName(ivars[i]);
         [ivarArray addObject:[NSString  stringWithCString:ivarName encoding:NSUTF8StringEncoding]];
     }
@@ -50,7 +50,7 @@ NSDictionary* RHInfoForClass(Class debugClass){
     
     objc_property_t* properties = class_copyPropertyList(debugClass, &count);
     NSMutableArray* propertyArray = [NSMutableArray arrayWithCapacity:count];
-    for (int i = 0; i < count ; i++){
+    for (u_int i = 0; i < count ; i++){
         const char* propertyName = property_getName(properties[i]);
         [propertyArray addObject:[NSString  stringWithCString:propertyName encoding:NSUTF8StringEncoding]];
     }
@@ -58,7 +58,7 @@ NSDictionary* RHInfoForClass(Class debugClass){
     
     Method* methods = class_copyMethodList(debugClass, &count);
     NSMutableArray* methodArray = [NSMutableArray arrayWithCapacity:count];
-    for (int i = 0; i < count ; i++){
+    for (u_int i = 0; i < count ; i++){
         SEL selector = method_getName(methods[i]);
         const char* methodName = sel_getName(selector);
         [methodArray addObject:[NSString  stringWithCString:methodName encoding:NSUTF8StringEncoding]];

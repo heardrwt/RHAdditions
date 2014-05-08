@@ -76,7 +76,7 @@
 }
 
 -(int)intForKey:(NSString *)aKey                             { return [[self numberForKey:aKey] intValue];              }
--(long)longForKey:(NSString *)aKey;                          { return [[self numberForKey:aKey] longValue];             }
+-(long)longForKey:(NSString *)aKey                           { return [[self numberForKey:aKey] longValue];             }
 -(unsigned long)unsignedLongForKey:(NSString *)aKey          { return [[self numberForKey:aKey] unsignedLongValue];     }
 -(long long)longLongForKey:(NSString *)aKey                  { return [[self numberForKey:aKey] longLongValue];         }
 -(unsigned long long)unsignedLongLongForKey:(NSString *)aKey { return [[self numberForKey:aKey] unsignedLongLongValue]; }

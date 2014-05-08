@@ -46,10 +46,10 @@
 
 @property (assign) BOOL allowsDragging;  //defaults to yes
 
-@property (copy) NSString *representedFilename; //filename for the image, provided to the drag recipient. default is "DraggedImage.png" unless representedURL has been set, in which case lastPathComponent is used. If set, will override lastPathComponent.
-@property (copy) NSURL *representedURL;         //if specified, instead of creating a new PNG representation for a drag promise, the file at the url will instead be copied to the requested destination.
+@property (nonatomic, copy) NSString *representedFilename; //filename for the image, provided to the drag recipient. default is "DraggedImage.png" unless representedURL has been set, in which case lastPathComponent is used. If set, will override lastPathComponent.
+@property (nonatomic, copy) NSURL *representedURL;         //if specified, instead of creating a new PNG representation for a drag promise, the file at the url will instead be copied to the requested destination.
 
-@property (assign) CGFloat maximumDragImageEdgeSize; //cap the size of the dragging representation so as to not be unwieldy on screen. default is 400.
+@property (nonatomic, assign) CGFloat maximumDragImageEdgeSize; //cap the size of the dragging representation so as to not be unwieldy on screen. default is 400.
 
 @end
 

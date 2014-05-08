@@ -30,6 +30,6 @@
 #import <Foundation/Foundation.h>
 #include <sys/sysctl.h>
 
-extern NSArray* RHGetBSDProcessList(); //returns an array of dictionaries with { processID / processName / userID / userName }
+extern NSArray* RHGetBSDProcessList(void); //returns an array of dictionaries with { processID / processName / userID / userName }
 extern int GetBSDProcessList(struct kinfo_proc **procList, size_t *procCount);
 
