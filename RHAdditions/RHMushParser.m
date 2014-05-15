@@ -195,8 +195,13 @@ static NSString * const RHMushParserColorKey = @"color";
                 NSMutableAttributedString *replacementString = [replacementAttributedStrings objectAtIndex:i];
                 NSInteger index = [[attributes objectAtIndex:1] intValue];
                 NSString *hexString = [[matchedAttributedStrings objectAtIndex:index] string];
-                attributes = @{NSForegroundColorAttributeName:RHColorFromHexString(hexString)};
-                [replacementString addAttributes:attributes range:NSMakeRange(0, replacementString.length)];
+                _NSUIColor *color = RHColorFromHexString(hexString);
+                if (color){
+                    attributes = @{NSForegroundColorAttributeName:color};
+                    [replacementString addAttributes:attributes range:NSMakeRange(0, replacementString.length)];
+                } else {
+                    NSLog(@"RHMushParser: Error parsing color from hexString:%@ with attributes:%@", hexString, attributes);
+                }
                 
             } else if ([attributes isKindOfClass:[NSDictionary class]]) {
                 NSMutableAttributedString *replacementString = [replacementAttributedStrings objectAtIndex:i];
