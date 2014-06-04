@@ -76,7 +76,7 @@ typedef enum NSInteger {
 
 
 
-@interface RHResizableImage : NSImage {
+@interface RHResizableImage : NSImage <NSCopying> {
     //ivars are private
     RHEdgeInsets _capInsets;
     RHResizableImageResizingMode _resizingMode;

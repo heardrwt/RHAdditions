@@ -131,7 +131,19 @@ RHEdgeInsets RHEdgeInsetsFromString(NSString* string){
     return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone
+{
+    RHResizableImage *ri = [super copyWithZone: zone];
 
+    ri->_capInsets = _capInsets;
+    ri->_imagePieces = arc_retain(_imagePieces);
+    ri->_cachedImageRep = arc_retain(_cachedImageRep);
+    ri->_cachedImageSize = _cachedImageSize;
+    ri->_cachedImageDeviceScale = _cachedImageDeviceScale;
+    ri->_resizingMode = _resizingMode;
+
+    return ri;
+}
 
 -(void)dealloc{
     arc_release_nil(_imagePieces);
