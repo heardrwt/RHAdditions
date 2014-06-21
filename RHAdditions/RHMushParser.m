@@ -80,6 +80,15 @@ static NSString * const RHMushParserColorKey = @"color";
 
 #pragma mark - parse
 -(void)parse{
+    if (!_baseColor) {
+        NSLog(@"RHMushParser: Error: parse called with a nil baseColor. Bailing.");
+        return;
+    }
+
+    if (!_baseFont) {
+        NSLog(@"RHMushParser: Error: parse called with a nil baseFont. Bailing.");
+        return;
+    }
 
     //apply base colour and font
     id base = @{
@@ -200,7 +209,7 @@ static NSString * const RHMushParserColorKey = @"color";
                     attributes = @{NSForegroundColorAttributeName:color};
                     [replacementString addAttributes:attributes range:NSMakeRange(0, replacementString.length)];
                 } else {
-                    NSLog(@"RHMushParser: Error parsing color from hexString:%@ with attributes:%@", hexString, attributes);
+                    NSLog(@"RHMushParser: Error parsing color from hexString: '%@' with attributes: %@", hexString, attributes);
                 }
                 
             } else if ([attributes isKindOfClass:[NSDictionary class]]) {
