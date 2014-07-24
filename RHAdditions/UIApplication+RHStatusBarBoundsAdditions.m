@@ -39,7 +39,9 @@
         case UIInterfaceOrientationPortraitUpsideDown: return frame.size.height;
         case UIInterfaceOrientationLandscapeLeft: return frame.size.width;
         case UIInterfaceOrientationLandscapeRight: return frame.size.width;
+        default: break;
     }
+    return 0; //unknown, none
 }
 
 -(CGFloat)rh_statusBarWidth{
@@ -50,7 +52,9 @@
         case UIInterfaceOrientationPortraitUpsideDown: return frame.size.width;
         case UIInterfaceOrientationLandscapeLeft: return frame.size.height;
         case UIInterfaceOrientationLandscapeRight: return frame.size.height;
+        default: break;
     }
+    return 0; //unknown, none
 }
 
 -(CGRect)rh_statusBarBounds{

@@ -56,7 +56,7 @@ pixel* UIImageCopyRGBAForImage(UIImage *image){
     pixel *pixels = calloc(width * height, sizeof(pixel));
     
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(pixels, width, height, bitsPerComponent, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast);
+    CGContextRef context = CGBitmapContextCreate(pixels, width, height, bitsPerComponent, bytesPerRow, colorSpace, (CGBitmapInfo)kCGImageAlphaPremultipliedLast);
     
     if (context) {
         UIGraphicsPushContext(context);
@@ -83,7 +83,7 @@ pixel* UIImageCopyRGBAForPointInImage(CGPoint point, UIImage*image){
     pixel *pixels = calloc(width * height, sizeof(pixel));
     
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(pixels, width, height, bitsPerComponent, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast);
+    CGContextRef context = CGBitmapContextCreate(pixels, width, height, bitsPerComponent, bytesPerRow, colorSpace, (CGBitmapInfo)kCGImageAlphaPremultipliedLast);
     
     if (context){
         UIGraphicsPushContext(context);

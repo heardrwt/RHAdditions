@@ -56,7 +56,7 @@
             _badge.alpha = 0.0f;
         } completion:^(BOOL finished) {
             [_badge removeFromSuperview];
-            arc_release(badge);
+            arc_release(_badge);
             _badge = nil;
             self.clipsToBounds = _oldClipsToBounds;
         }];

@@ -27,6 +27,10 @@
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+#ifdef __APPLE__
+    #import "TargetConditionals.h"
+#endif
+
 #if (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)
     #import <UIKit/UIKit.h>
 #else

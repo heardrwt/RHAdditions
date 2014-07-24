@@ -45,6 +45,10 @@
 //  Requirements: OS X 10.7+ / iOS 4.0+
 //
 
+#ifdef __APPLE__
+    #import "TargetConditionals.h"
+#endif
+
 #if (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)
     #import <UIKit/UIKit.h>
     #import <CoreText/CoreText.h>

@@ -28,18 +28,48 @@
 //
 
 #import "UILabel+RHSizeAdditions.h"
+#import "RHARCSupport.h"
 
 @implementation UILabel (RHLayoutAdditions)
 
 -(CGSize)sizeWithMaxWidth:(CGFloat)maxWidth{
-    CGSize size = [self.text sizeWithFont:self.font constrainedToSize:CGSizeMake(maxWidth, CGFLOAT_MAX) lineBreakMode:self.lineBreakMode];
-    return CGSizeMake(MIN(maxWidth, size.width), size.height);
+    if ([self respondsToSelector: @selector(boundingRectWithSize:options:attributes:context:)]) {
+        
+        NSMutableParagraphStyle *paragraphStyle = arc_autorelease([[NSMutableParagraphStyle alloc] init]);
+        paragraphStyle.lineBreakMode = self.lineBreakMode;
+        NSDictionary *attributes = @{NSFontAttributeName:self.font, NSParagraphStyleAttributeName:paragraphStyle};
+        CGSize size = [self.text boundingRectWithSize:CGSizeMake(maxWidth, CGFLOAT_MAX) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
+        return CGSizeMake(MIN(maxWidth, ceilf(size.width)), ceilf(size.height));
+        
+    } else {
+        
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        CGSize size = [self.text sizeWithFont:self.font constrainedToSize:CGSizeMake(maxWidth, CGFLOAT_MAX) lineBreakMode:self.lineBreakMode];
+        return CGSizeMake(MIN(maxWidth, ceilf(size.width)), ceilf(size.height));
+#pragma clang diagnostic pop
+        
+    }
 }
 
 -(CGSize)sizeWithMaxHeight:(CGFloat)maxHeight{
-    CGSize size = [self.text sizeWithFont:self.font constrainedToSize:CGSizeMake(CGFLOAT_MAX, maxHeight) lineBreakMode:self.lineBreakMode];
-    return CGSizeMake(size.width, MIN(maxHeight, size.height));
-}
+    if ([self respondsToSelector: @selector(boundingRectWithSize:options:attributes:context:)]) {
+        
+        NSMutableParagraphStyle *paragraphStyle = arc_autorelease([[NSMutableParagraphStyle alloc] init]);
+        paragraphStyle.lineBreakMode = self.lineBreakMode;
+        NSDictionary *attributes = @{NSFontAttributeName:self.font, NSParagraphStyleAttributeName:paragraphStyle};
+        CGSize size = [self.text boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, maxHeight) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
+        return CGSizeMake(ceilf(size.width), MIN(maxHeight, ceilf(size.height)));
+        
+    } else {
+        
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        CGSize size = [self.text sizeWithFont:self.font constrainedToSize:CGSizeMake(CGFLOAT_MAX, maxHeight) lineBreakMode:self.lineBreakMode];
+        return CGSizeMake(size.width, MIN(maxHeight, size.height));
+#pragma clang diagnostic pop
+        
+    }}
 
 -(CGFloat)heightForWidth:(CGFloat)width{
     return [self sizeWithMaxWidth:width].height;
