@@ -36,7 +36,7 @@
     static NSCalendar *_gregorianCalendar = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _gregorianCalendar =  [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        _gregorianCalendar =  [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     });
     
     return _gregorianCalendar;
@@ -50,21 +50,21 @@
 //components
 -(NSDateComponents*)componentsForGregorianCalendar{
     
-    NSUInteger components = NSEraCalendarUnit
-    | NSYearCalendarUnit
-    | NSMonthCalendarUnit
-    | NSDayCalendarUnit
-    | NSHourCalendarUnit
-    | NSMinuteCalendarUnit
-    | NSSecondCalendarUnit
-    | NSWeekdayCalendarUnit
-    | NSWeekdayOrdinalCalendarUnit
-    | NSQuarterCalendarUnit
-    | NSWeekOfMonthCalendarUnit
-    | NSWeekOfYearCalendarUnit
-    | NSYearForWeekOfYearCalendarUnit
-    | NSCalendarCalendarUnit
-    | NSTimeZoneCalendarUnit;
+    NSUInteger components = NSCalendarUnitEra
+    | NSCalendarUnitYear
+    | NSCalendarUnitMonth
+    | NSCalendarUnitDay
+    | NSCalendarUnitHour
+    | NSCalendarUnitMinute
+    | NSCalendarUnitSecond
+    | NSCalendarUnitWeekday
+    | NSCalendarUnitWeekdayOrdinal
+    | NSCalendarUnitQuarter
+    | NSCalendarUnitWeekOfMonth
+    | NSCalendarUnitWeekOfYear
+    | NSCalendarUnitYearForWeekOfYear
+    | NSCalendarUnitCalendar
+    | NSCalendarUnitTimeZone;
     
     return [[NSCalendar gregorianCalendar] components:components fromDate:self];
 }
@@ -78,7 +78,7 @@
 }
 
 -(NSInteger)secondsBetweenDates:(NSDate*)otherDate{
-    NSDateComponents *components = [[NSCalendar gregorianCalendar] components:NSSecondCalendarUnit fromDate:self toDate:otherDate options:0];
+    NSDateComponents *components = [[NSCalendar gregorianCalendar] components:NSCalendarUnitSecond fromDate:self toDate:otherDate options:0];
     return ABS(components.second);
 }
 
@@ -91,7 +91,7 @@
 }
 
 -(NSInteger)daysBetweenDates:(NSDate*)otherDate{
-    NSDateComponents *components = [[NSCalendar gregorianCalendar] components:NSDayCalendarUnit fromDate:self toDate:otherDate options:0];
+    NSDateComponents *components = [[NSCalendar gregorianCalendar] components:NSCalendarUnitDay fromDate:self toDate:otherDate options:0];
     return ABS(components.day);
 }
 
@@ -121,7 +121,7 @@
 
 //normalization
 -(NSDate*)normalizedDate{
-    NSDateComponents* components = [[NSCalendar gregorianCalendar] components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:self];
+    NSDateComponents* components = [[NSCalendar gregorianCalendar] components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:self];
     return [[NSCalendar gregorianCalendar] dateFromComponents:components];
 }
 

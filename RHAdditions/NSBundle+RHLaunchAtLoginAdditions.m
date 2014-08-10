@@ -46,7 +46,12 @@ extern BOOL RHLaunchAtLoginEnabledForBundleIdentifier(NSString *bundleIdentifier
     
     BOOL enabled = NO;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    //See: rdar://17951732 ER: Need a way to query a given a given domains SMLoginItemSetEnabled() state given that SMCopyAllJobDictionaries is deprecated in 10.10.
     CFArrayRef jobs = SMCopyAllJobDictionaries(kSMDomainUserLaunchd);
+#pragma clang diagnostic pop
+
     if (!jobs) return NO;
     
     for (CFIndex i = 0; i < CFArrayGetCount(jobs); i++) {

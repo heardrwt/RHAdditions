@@ -109,7 +109,7 @@ NSString* NSStringGenerateSHA1FromString(NSString *string){
     //sha1 hash the string
     const char *str = [string UTF8String];
     unsigned char outBuffer[CC_SHA1_DIGEST_LENGTH];
-    CC_SHA1(str, strlen(str), outBuffer);
+    CC_SHA1(str, (CC_LONG)strlen(str), outBuffer);
     
     NSMutableString *hash = [NSMutableString string];
     for(int i = 0; i<CC_SHA1_DIGEST_LENGTH; i++) {

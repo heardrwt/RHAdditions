@@ -43,9 +43,17 @@
 
 @class RHResizableImage;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 101000
+
+typedef NSEdgeInsets RHEdgeInsets;
+
+#else
+
 typedef struct _RHEdgeInsets {
     CGFloat top, left, bottom, right;  // specify amount to inset (positive) for each of the edges. values can be negative to 'outset'
 } RHEdgeInsets;
+
+#endif
 
 extern RHEdgeInsets RHEdgeInsetsMake(CGFloat top, CGFloat left, CGFloat bottom, CGFloat right);
 extern CGRect RHEdgeInsetsInsetRect(CGRect rect, RHEdgeInsets insets, BOOL flipped); //if flipped origin is top-left otherwise origin is bottom-left (OSX Default is NO)
@@ -55,18 +63,30 @@ extern const RHEdgeInsets RHEdgeInsetsZero;
 extern NSString *NSStringFromRHEdgeInsets(RHEdgeInsets insets);
 extern RHEdgeInsets RHEdgeInsetsFromString(NSString* string);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 101000
 
-typedef enum NSInteger {
+typedef NSImageResizingMode RHResizableImageResizingMode;
+enum {
+    RHResizableImageResizingModeTile = NSImageResizingModeTile,
+    RHResizableImageResizingModeStretch = NSImageResizingModeStretch,
+};
+
+#else
+
+typedef NS_ENUM(NSInteger, RHResizableImageResizingMode) {
     RHResizableImageResizingModeTile,
     RHResizableImageResizingModeStretch,
-} RHResizableImageResizingMode;
+};
+
+#endif
+
 
 @interface NSImage (RHResizableImageAdditions)
 
--(RHResizableImage*)resizableImageWithCapInsets:(RHEdgeInsets)capInsets; //create a resizable version of this image. the interior is tiled when drawn.
--(RHResizableImage*)resizableImageWithCapInsets:(RHEdgeInsets)capInsets resizingMode:(RHResizableImageResizingMode)resizingMode; //the interior is resized according to the resizingMode
+-(RHResizableImage *)resizableImageWithCapInsets:(RHEdgeInsets)capInsets; //create a resizable version of this image. the interior is tiled when drawn.
+-(RHResizableImage *)resizableImageWithCapInsets:(RHEdgeInsets)capInsets resizingMode:(RHResizableImageResizingMode)resizingMode; //the interior is resized according to the resizingMode
 
--(RHResizableImage*)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(CGFloat)topCapHeight; // right cap is calculated as width - leftCapWidth - 1; bottom cap is calculated as height - topCapWidth - 1;
+-(RHResizableImage *)stretchableImageWithLeftCapWidth:(CGFloat)leftCapWidth topCapHeight:(CGFloat)topCapHeight; // right cap is calculated as width - leftCapWidth - 1; bottom cap is calculated as height - topCapWidth - 1;
 
 
 -(void)drawTiledInRect:(NSRect)rect operation:(NSCompositingOperation)op fraction:(CGFloat)delta;
@@ -88,13 +108,13 @@ typedef enum NSInteger {
     CGFloat _cachedImageDeviceScale;
 }
 
--(id)initWithImage:(NSImage*)image leftCapWidth:(CGFloat)leftCapWidth topCapHeight:(CGFloat)topCapHeight; // right cap is calculated as width - leftCapWidth - 1; bottom cap is calculated as height - topCapWidth - 1;
+-(id)initWithImage:(NSImage *)image leftCapWidth:(CGFloat)leftCapWidth topCapHeight:(CGFloat)topCapHeight; // right cap is calculated as width - leftCapWidth - 1; bottom cap is calculated as height - topCapWidth - 1;
 
--(id)initWithImage:(NSImage*)image capInsets:(RHEdgeInsets)capInsets;
--(id)initWithImage:(NSImage*)image capInsets:(RHEdgeInsets)capInsets resizingMode:(RHResizableImageResizingMode)resizingMode; //designated initializer
+-(id)initWithImage:(NSImage *)image capInsets:(RHEdgeInsets)capInsets;
+-(id)initWithImage:(NSImage *)image capInsets:(RHEdgeInsets)capInsets resizingMode:(RHResizableImageResizingMode)resizingMode; //designated initializer
 
-@property(nonatomic,readonly) RHEdgeInsets capInsets; //default is RHEdgeInsetsZero
-@property(nonatomic,readonly) RHResizableImageResizingMode resizingMode; //default is UIImageResizingModeTile
+@property RHEdgeInsets capInsets; //default is RHEdgeInsetsZero
+@property RHResizableImageResizingMode resizingMode; //default is UIImageResizingModeTile
 
 -(void)drawInRect:(NSRect)rect;
 -(void)drawInRect:(NSRect)rect operation:(NSCompositingOperation)op fraction:(CGFloat)requestedAlpha;

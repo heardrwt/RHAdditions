@@ -42,8 +42,12 @@
         return;
     }
 #endif //end 10.9+
-    
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [self beginSheetModalForWindow:sheetWindow modalDelegate:self didEndSelector:@selector(rh_alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge_retained void *)handler];
+#pragma clang diagnostic pop
+
 }
 
 -(void)rh_alertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo{
