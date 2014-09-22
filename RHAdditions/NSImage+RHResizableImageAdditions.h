@@ -96,7 +96,7 @@ typedef NS_ENUM(NSInteger, RHResizableImageResizingMode) {
 
 
 
-@interface RHResizableImage : NSImage {
+@interface RHResizableImage : NSImage <NSCopying> {
     //ivars are private
     RHEdgeInsets _capInsets;
     RHResizableImageResizingMode _resizingMode;
