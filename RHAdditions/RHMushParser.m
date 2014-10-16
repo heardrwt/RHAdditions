@@ -116,10 +116,14 @@ static NSString * const RHMushParserColorKey = @"color";
               andAttributes:@[@{}, @{ NSUnderlineStyleAttributeName:@(NSUnderlineStyleSingle) }, @{}]];
     
     //monospace
-    [self _applyParserRegex:@"(`)(.+?)(`)"
-           withReplacements:@[@"", @1, @""]
-              andAttributes:@[@{}, @{ NSFontAttributeName:_monospaceFont }, @{}]];
-    
+    if (!_monospaceFont) {
+        [self _applyParserRegex:@"(`)(.+?)(`)"
+               withReplacements:@[@"", @1, @""]
+                  andAttributes:@[@{}, @{ NSFontAttributeName:_monospaceFont }, @{}]];
+    } else {
+        NSLog(@"RHMushParser: Error: parse called with a nil monospaceFont. Unable to render monospace text.");
+    }
+
     //color
     [self _applyParserRegex:@"(\\{)(.+?)(\\|)(.+?)(\\})"
            withReplacements:@[@"", @"", @"", @3, @""]
@@ -270,7 +274,7 @@ static NSString * const RHMushParserColorKey = @"color";
     _italicFont = arc_retain([_NSUIFont fontWithName:(__bridge NSString *)italicNameRef size:size] ?: font);
     
     arc_release(_monospaceFont);
-    _monospaceFont = arc_retain([_NSUIFont fontWithName:@"CourierNewPSMT" size:size]);
+    _monospaceFont = arc_retain([_NSUIFont fontWithName:@"Courier New" size:size]);
     
     if (baseFontRef) CFRelease(baseFontRef);
     if (boldFontRef) CFRelease(boldFontRef);
