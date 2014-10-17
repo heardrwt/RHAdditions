@@ -116,7 +116,7 @@ static NSString * const RHMushParserColorKey = @"color";
               andAttributes:@[@{}, @{ NSUnderlineStyleAttributeName:@(NSUnderlineStyleSingle) }, @{}]];
     
     //monospace
-    if (!_monospaceFont) {
+    if (_monospaceFont) {
         [self _applyParserRegex:@"(`)(.+?)(`)"
                withReplacements:@[@"", @1, @""]
                   andAttributes:@[@{}, @{ NSFontAttributeName:_monospaceFont }, @{}]];
