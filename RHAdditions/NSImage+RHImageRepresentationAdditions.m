@@ -56,8 +56,8 @@ NSData* RHImagePNGRepresentationForImage(NSImage *image){
     if (image.size.width > 5000 || image.size.height > 5000) return nil;
 
     //check to make sure we have a bitmap image rep
-    NSBitmapImageRep *imageRep = [[image representations] lastObject];
-    if (! [imageRep isKindOfClass:[NSBitmapImageRep class]]){
+    NSBitmapImageRep *imageRep = (NSBitmapImageRep *)[[image representations] lastObject];
+    if (![imageRep isKindOfClass:[NSBitmapImageRep class]]){
     
         [image lockFocus];
 
@@ -67,7 +67,7 @@ NSData* RHImagePNGRepresentationForImage(NSImage *image){
         [image unlockFocus];
     }
 
-    return [imageRep representationUsingType:NSPNGFileType properties:nil];
+    return [imageRep representationUsingType:NSPNGFileType properties:@{}];
 }
 
 
@@ -75,7 +75,7 @@ NSData* RHImageJPEGRepresentationForImage(NSImage *image, float compressionFacto
     
     
     //check to make sure we have a bitmap image rep
-    NSBitmapImageRep *imageRep = [[image representations] lastObject];
+    NSBitmapImageRep *imageRep = (NSBitmapImageRep *)[[image representations] lastObject];
     if (! [imageRep isKindOfClass:[NSBitmapImageRep class]]){
         
         [image lockFocus];
