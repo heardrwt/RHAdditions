@@ -30,6 +30,10 @@
 #import "RHWeakValue.h"
 #import "RHARCSupport.h"
 
+@interface RHWeakValue () {
+    __weak id _weakValue;
+}
+
 @implementation RHWeakValue
 @synthesize weakValue=_weakValue;
 
