@@ -67,6 +67,9 @@ NSData* RHImagePNGRepresentationForImage(NSImage *image){
         [image unlockFocus];
     }
 
+    // HACK to work around 10.12.4 gamma issues
+    imageRep = [[NSBitmapImageRep alloc] initWithData:[imageRep TIFFRepresentation]];
+    
     return [imageRep representationUsingType:NSPNGFileType properties:@{}];
 }
 
