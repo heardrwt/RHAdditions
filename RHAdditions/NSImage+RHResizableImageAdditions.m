@@ -175,7 +175,6 @@ RHEdgeInsets RHEdgeInsetsFromString(NSString* string){
         _cachedImageDeviceScale = 0.0f;
     }
     
-    
     //if we don't have a cached image rep, create one now
     if (!_cachedImageRep){
 
@@ -344,7 +343,7 @@ CGFloat RHContextGetDeviceScale(CGContextRef context){
 
 
 
-void RHDrawNinePartImage(NSRect frame, NSImage *topLeftCorner, NSImage *topEdgeFill, NSImage *topRightCorner, NSImage *leftEdgeFill, NSImage *centerFill, NSImage *rightEdgeFill, NSImage *bottomLeftCorner, NSImage *bottomEdgeFill, NSImage *bottomRightCorner, NSCompositingOperation op, CGFloat alphaFraction, BOOL shouldTile){
+void RHDrawNinePartImage(NSRect frame, NSImage *topLeftCorner, NSImage *topEdgeFill, NSImage *topRightCorner, NSImage *leftEdgeFill, NSImage *centerFill, NSImage *rightEdgeFill, NSImage *bottomLeftCorner, NSImage *bottomEdgeFill, NSImage *bottomRightCorner, NSCompositingOperation op, CGFloat fraction, BOOL shouldTile){
     
     CGFloat imageWidth = frame.size.width;
     CGFloat imageHeight = frame.size.height;
